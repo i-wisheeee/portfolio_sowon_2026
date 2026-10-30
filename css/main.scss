@@ -2357,153 +2357,190 @@ body {
 
 
 /* 메인5 - section-05 */
-.section-05 {
-    width: 100%;
-    min-height: 150vh;
-    padding: 2rem 1.6rem;
-    background-color: #f5f5f5;
-    color: #1a1a1a;
-    margin-bottom: 20vh;
-    border-radius: 0 0 10rem 10rem;
-    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.15),
-        inset 0 -1rem 2rem rgba(255, 255, 255, 0.6);
-
-
-    .section-title {
-        font-size: 12rem;
-        font-weight: 700;
-        margin: 10rem;
-        text-align: center;
-    }
-
-    .section-desc {
-        font-size: 2rem;
-        color: #555;
-        text-align: center;
-        margin-bottom: 10em;
-        line-height: 1.5;
-
-    }
-
-    .card-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-auto-rows: auto;
-        gap: 2rem;
-        justify-items: center;
-        margin-bottom: 10rem;
-
-
-
-        .card-item {
-            width: 100%;
-            max-width: 30rem;
-            position: relative;
-            margin-bottom: 5rem;
-            background-color: #fff;
-            border-radius: 2rem;
-            padding: 3rem 2rem 2rem;
-            box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
-            position: relative;
-
-            z-index: 1;
-
-            &:hover {
-                overflow: visible;
-                /* hover 시만 overflow를 보이게 설정 */
-                z-index: 10;
-            }
-
-            .card-circle {
-                width: 6rem;
-                height: 6rem;
-                background-color: #fff;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-weight: 700;
-                font-size: 1.5rem;
-                position: absolute;
-                top: -4rem;
-                z-index: 10;
-                left: 50%;
-                transform: translateX(-50%);
-                box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
-
-                img {
-                    width: 100%;
-                    object-fit: contain;
-                    border-radius: 50%;
-                }
-            }
-
-
-            .card-title {
-                text-align: center;
-                font-size: 2rem;
-                font-weight: bold;
-
-                font-size: 1.8rem;
-                font-weight: 700;
-                margin-bottom: 1rem;
-            }
-
-
-            .card-desc {
-                font-size: 1.8rem;
-                text-align: center;
-                line-height: 1.5;
-
-                font-size: 1.4rem;
-                color: #666;
-                margin-bottom: 2rem;
-            }
-
-
-            .card-figure {
-                width: 100%;
-                height: 20rem;
-                border-radius: 1.5rem;
-                overflow: hidden;
-                background-color: #ffd270;
-                position: relative;
-
-                img {
-                    width: 100%;
-                    height: auto;
-                    object-fit: contain;
-                    transition: transform 0.3s ease;
-                    transform-origin: center center;
-                    /* 중심 기준으로 확대 */
-                    display: block;
-                    /* transform이 깨지지 않도록 블록 요소로 */
-                    z-index: 1;
-                    will-change: transform;
-
-
-                    &:hover {
-                        transform: scale(2);
-                        z-index: 10;
-                        cursor: pointer;
-                        position: absolute;
-                        /* hover시 절대위치로 만들어 튀어나오되 원래자리에서 부드럽게 튀어나오도록 */
-
-                    }
-                }
-            }
-        }
-    }
+#projects {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden; /* Important for pinning */
 }
 
-@media (max-width: 1440px) {}
+/* LEFT SIDE - STICKY */
+.section-05 .project-left {
+  width: 40%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6.4rem 8rem;
+  z-index: 2;
+}
 
-@media (max-width: 1028px) {}
+.overline {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-grey);
+  margin-bottom: 2.4rem;
+}
 
-@media (max-width: 900px) {}
+.project-title {
+  font-family: var(--font-serif);
+  font-size: 5.6rem;
+  line-height: 1.1;
+  font-weight: 400;
+  margin-bottom: 3.2rem;
+  color: var(--text-dark);
+}
 
-@media (max-width: 760px) {}
+.project-title em {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+}
 
+.project-description {
+  font-size: 1.6rem;
+  line-height: 1.7;
+  color: var(--text-grey);
+  max-width: 350px;
+  margin-bottom: 4.8rem;
+}
+
+/* Interactive Button */
+.btn-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 500;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.btn-arrow svg {
+  transition: transform 0.3s ease;
+}
+
+.btn-arrow:hover {
+  color: var(--accent);
+}
+
+.btn-arrow:hover svg {
+  transform: translateX(5px);
+  stroke: var(--accent);
+}
+
+/* RIGHT SIDE - SCROLLABLE */
+.project-right {
+  width: 60%;
+  height: 100vh;
+  overflow: hidden; 
+  position: relative;
+}
+.project-right img {
+  width: 20px;
+  object-fit: cover;
+}
+
+/* GRID */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3.2rem;
+  padding: 12.8rem 6.4rem 150px 0; /* Top padding aligns with left text visually */
+  width: 100%;
+}
+
+/* CARD DESIGN */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  cursor: pointer;
+  group: hover; /* Setup for hover effects */
+}
+
+/* Image styling */
+.img-wrapper {
+  width: 100%;
+  aspect-ratio: 3/4; /* Portrait ratio for architecture */
+  overflow: hidden;
+  background: #e0e0e0;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Hover Effect: Zoom Image */
+.project-card:hover .img-wrapper img {
+  transform: scale(1.05);
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  padding-top: 1.6rem;
+}
+
+.meta-left h3 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 0.8rem;
+}
+
+.meta-left p {
+  font-size: 1.4rem;
+  color: var(--text-grey);
+  line-height: 1.5;
+}
+
+.meta-right {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  #projects {
+    flex-direction: column;
+    height: auto !important;
+  }
+
+  .project-left, .project-right {
+    width: 100%;
+    height: auto;
+    padding: 3.2rem;
+  }
+  
+  .project-left {
+    padding-top: 6.4rem;
+    align-items: flex-start;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  
+  .project-title {
+    font-size: 4rem;
+  }
+}
 
 .topbtn {
     display: none;
@@ -2890,4 +2927,147 @@ body {
     100% {
         transform: translateX(-100%);
     }
+}
+
+/* 반응형 보완 */
+.footer {
+  overflow-x: hidden;
+}
+
+@media (max-width: 1024px) {
+  .main_visual .inner .info-wrap .info-cont h1 {
+    font-size: 8rem;
+    line-height: 8rem;
+  }
+  .section-04 {
+    gap: 3rem;
+  }
+  .section-04 > div {
+    height: auto;
+  }
+  .section-04 section {
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    gap: 4rem;
+    padding: 4rem 3rem;
+  }
+  .section-04 .text,
+  .section-04 .section-4 .image,
+  .section-04 .section-5 .image {
+    width: 100%;
+    height: auto;
+  }
+  .section-04 .text .box .title {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .section-04 .text .box .title h2 {
+    white-space: normal;
+    margin: 0;
+  }
+  .section-04 .text .box p,
+  .section-04 .text .list {
+    padding-right: 0;
+  }
+  .section-04 .mockup {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 745/730;
+    max-width: 60rem;
+  }
+  .section-04 .mockup p {
+    white-space: normal;
+    width: 90%;
+    text-align: center;
+  }
+  .section-04 .section-2 .mockup .wrap2 {
+    display: none;
+  }
+  .section-04 .section-4 .image,
+  .section-04 .section-5 .image {
+    position: relative;
+    max-width: 50rem;
+  }
+  .footer .utill {
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+  }
+  .footer .utill .con {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+@media (max-width: 760px) {
+  .header .inner {
+    width: auto;
+    top: 1.6rem;
+    right: 1.6rem;
+  }
+  .header .inner nav {
+    width: 80vw;
+    top: 100%;
+    left: auto;
+    right: 0;
+  }
+  .section-04 .mockup p {
+    font-size: 1.3rem;
+    width: 100%;
+  }
+  .main_visual .inner .info-wrap .info-cont h1 {
+    font-size: 5.6rem;
+    line-height: 6rem;
+  }
+  .section-04 {
+    padding: 2rem 1.6rem;
+  }
+  .section-04 section {
+    padding: 3rem 2rem;
+    font-size: 2.4em;
+  }
+  .section-04 .text .box .title h2,
+  .section-04 .section-3 .text .box .title h2 {
+    font-size: 4rem;
+  }
+  .section-04 .text .box p,
+  .section-04 .text .list {
+    font-size: 1.5rem;
+  }
+  .section-04 .text .btn li a {
+    width: auto;
+    height: auto;
+    padding: 1rem 2rem;
+    font-size: 1.6rem;
+    line-height: 1.5;
+  }
+  .footer .utill {
+    width: 100%;
+    padding: 3rem 1.6rem;
+  }
+  .footer .utill .con li {
+    width: 12rem;
+    height: 12rem;
+    font-size: 2.4rem;
+    line-height: 5;
+  }
+  .footer .utill .con li:nth-child(4) {
+    font-size: 2rem;
+  }
+  .footer .footnav {
+    width: 100%;
+  }
+  .footer .footnav .gnb > li a.depth-01 {
+    height: auto;
+    line-height: 1.5;
+    padding: 1.5rem 3rem 1.5rem 1.6rem;
+  }
+  .footer .utill .menu p {
+    font-size: 3.6rem;
+  }
+  .footer .utill .menu ul li {
+    font-size: 2.2rem;
+  }
 }

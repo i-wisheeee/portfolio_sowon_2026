@@ -8,6 +8,8 @@
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital@0;1&display=swap">
     <link rel="stylesheet" href="css/main.scss">
     <link rel="stylesheet" href="css/main.css">
 
@@ -28,19 +30,6 @@
         $(function () {
             AOS.init();
 
-            let i = 0;
-            let topBanner = $('.top_banner ul li');
-
-            setInterval(function () {
-                i++;
-                console.log(i)
-                if (i >= topBanner.length) {
-                    i = 0;
-
-                }
-                topBanner.removeClass('on');
-                topBanner.eq(i).addClass('on');
-            }, 3000);
 
             const nav = document.getElementById("nav");
             const menuBtn = document.querySelector(".menu-btn");
@@ -295,7 +284,7 @@
 
 
 
-            $(".div-inner-1, .div-inner-2, .div-inner-3, .div-inner-4, .div-inner-5, .div-inner-6").each(function () {
+            if (window.matchMedia("(min-width: 1025px)").matches) $(".div-inner-1, .div-inner-2, .div-inner-3, .div-inner-4, .div-inner-5, .div-inner-6").each(function () {
                 let tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: this,
@@ -316,28 +305,68 @@
 
 
             //메인5
+            gsap.registerPlugin(ScrollTrigger);
 
+            function initScroll() {
+                const projectsSection = document.querySelector("#projects");
+                const grid = document.querySelector(".cards-grid");
+                const viewport = document.querySelector(".project-right");
 
-            $(document).ready(function () {
-                $('.card-figure img').hover(
-                    function () {
-                        $(this).css({
-                            'transform': 'scale(2)',
-                            'z-index': '10',
-                            'position': 'relative'
-                        });
-                        $(this).closest('.card-figure').css('overflow', 'visible');
-                    },
-                    function () {
-                        $(this).css({
-                            'transform': 'scale(1)',
-                            'z-index': '1',
-                            'position': 'relative'
-                        });
-                        $(this).closest('.card-figure').css('overflow', 'hidden');
+                if (!projectsSection || !grid || !viewport) return;
+
+                // Function to setup the scroll logic
+                const createScroll = () => {
+                    let isMobile = window.innerWidth <= 1024;
+
+                    // Kill previous triggers to prevent bugs on resize
+                    ScrollTrigger.getAll().forEach(t => {
+                        if (t.trigger === projectsSection) t.kill(true);
+                    });
+
+                    if (isMobile) {
+                        // Reset styles for mobile
+                        gsap.set(grid, { y: 0 });
+                        return;
                     }
-                );
-            });
+
+                    // Calculate distance
+                    // We want the grid to scroll up until the bottom of the grid matches the bottom of the viewport
+                    const totalHeight = grid.scrollHeight;
+                    const viewHeight = viewport.offsetHeight;
+                    const distance = totalHeight - viewHeight;
+
+                    // Only animate if content is taller than viewport
+                    if (distance > 0) {
+                        gsap.to(grid, {
+                            y: -distance,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: projectsSection,
+                                start: "top top",
+                                end: `+=${distance}`, // The pin duration matches the scroll distance exactly
+                                pin: true,
+                                scrub: true, // Slight smoothing (1 second delay) for "luxurious" feel
+                                invalidateOnRefresh: true, // Recalculate on resize
+                                markers: false // Set to true to debug
+                            }
+                        });
+                    }
+                };
+
+                // Init
+                createScroll();
+
+                // Debounced Resize Event
+                let resizeTimer;
+                window.addEventListener("resize", () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(createScroll, 200);
+                });
+            }
+
+            // Run on load
+            if (document.readyState === "complete") initScroll();
+            else window.addEventListener("load", initScroll);
 
 
             //탑버튼
@@ -455,12 +484,6 @@
 
 <body>
     <div id="wrap">
-        <div class="top_banner">
-            <ul>
-                <li class="on">본 포트폴리오는 1920px에 최적화 되어있습니다.</li>
-                <li>또한 반응형 제외 제작물또한 동일함을 알려드립니다.</li>
-            </ul>
-        </div><!-- .top_banner end -->
 
         <main class="main" id="main_visual">
 
@@ -611,7 +634,7 @@
                             단순한 연결 속에서 기술은 경험이 되고, 감성은 구조 속에서 완성됩니다. <br /> 그리고 그 모든 흐름 안에는 저의 <span>시간</span>이
                             있습니다.<br />
                             <span>시행착오와 탐색의 흔적 등, 작은 점</span>이 쌓여 지금의 저를 만들었습니다.<br />
-                            
+
                             구조를 설계하고 감성을 구현하는 사람, 그 과정 속에서 쌓인 감각과 기술,<br /> 그것이 <span>"지금의 나를 만든 선"</span>이며, 저는 그
                             모든 <br />
                             경험을 연결해 <span>현재의 세상을 디자인하고 구현해 내는 웹 퍼블리셔</span>입니다.
@@ -841,7 +864,8 @@
                             <ul class="btn">
                                 <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/" target="_blank"><span>Web
                                             site💻</span></a></li>
-                                <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/sub/sub.html" target="_blank"><span>Sub Page⌨</span></a></li>
+                                <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/sub/sub.html"
+                                        target="_blank"><span>Sub Page⌨</span></a></li>
                                 <li><a href="https://github.com/i-wisheeee/yuhan-kimberly" target="_blank"><span>Git hub
                                             <img src="img/2git.png" alt="git"></span></a></li>
                                 <li><a href="img/유한킴벌리.pdf" target="_blank"><span>Process 📁</span></a></li>
@@ -1287,106 +1311,144 @@
 
 
             <section class="section-05" id="section-05">
-                <div class="wrapper-content">
-                    <h2 class="section-title">GRAPHIC DESIGN</h2>
-                    <p class="section-desc">
-                        A Collection of Works in Branding, Editorial, and Digital Design. <br />
-                        이미지에 마우스를 올리면 해당 이미지를 자세히 볼 수 있습니다.
-                    </p>
 
-                    <div class="card-grid">
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/ai.svg" alt="일러스트" /></div>
-                            <h3 class="card-title">청년아 모여라</h3>
-                            <p class="card-desc">
-                                일러스트 3D입체화 효과로 만든 3D글씨포스터를 제작하였습니다.
+               
+                <section id="projects">
+                    <div class="project-left">
+                        <div class="project-left-content">
+                            <div class="overline">GRAPHIC DESIGN</div>
+                            <h2 class="project-title"><em>A Collection of Works</em> <br> in Branding, Editorial, and
+                                Digital Design.</h2>
+                            <p class="project-description">
+                                We bridge the gap between function and artistry. Explore our curated selection of
+                                residential and commercial architectural projects.
                             </p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/포스터.jpg" alt="포스터1" loading="lazy" />
-                            </figure>
+                            <a href="#" class="btn-arrow">
+                                View All Projects
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
                         </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/ai.svg" alt="일러스트" /></div>
-                            <h3 class="card-title">sowon</h3>
-                            <p class="card-desc">
-                                일러스트 부풀리기 효과로 포스터를 제작하였습니다.
-                            </p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/sowon2.png" alt="포스터2" loading="lazy" />
-                            </figure>
-                        </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/ai.svg" alt="일러스트"></div>
-                            <h3 class="card-title">유한킴벌리 채용공고 포스터</h3>
-                            <p class="card-desc">
-                                일러스트의 블렌드 모드를 이용하여 피그마와 함께 유한킴벌리의 채용공고 포스터를 제작하였습니다.
-                            </p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/you1.png" alt="포스터3" loading="lazy" />
-                            </figure>
-                        </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/ai.svg" alt="ai"></div>
-                            <h3 class="card-title">flower 3D포스터</h3>
-                            <p class="card-desc">일러스트 3D+아트매핑기술로 포스터를 제작하였습니다.</p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/flower.jpg" alt="포스터4" loading="lazy" />
-                            </figure>
-                        </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/photo.svg" alt="포토샵" /></div>
-                            <h3 class="card-title">파자마 쇼핑몰 포스터</h3>
-                            <p class="card-desc">
-                                포토샵을 활용한 파자마 쇼핑몰 포스터를 제작하였습니다.
-                            </p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/pajama.jpg" alt="포스터5" loading="lazy" />
-                            </figure>
-                        </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/photo.svg" alt="포토샵" /></div>
-                            <h3 class="card-title">헬로우 슬립</h3>
-                            <p class="card-desc">
-                                포토샵을 활용한 움직이는 gif 포스터를 제작하였습니다.
-                            </p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/헬로우슬립.gif" alt="포스터6" loading="lazy" />
-                            </figure>
-                        </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/photo.svg" alt="포토샵" /></div>
-                            <h3 class="card-title">파마자쇼핑몰 상세페이지 제작 <br /> (이미지를 클릭해주세요)</h3>
-                            <p class="card-desc">
-                                포토샵을 활용한 파자마 쇼핑몰 상세페이지를 제작하였습니다.
-                                *일부 이미지는 포트폴리오용제작목적으로 사용되었으며 출처가 있음을 밝힙니다. 출처:핀터레스트-w컨셉*
-                            </p>
-                            <figure class="card-figure">
-                                <a href="img/상세페이지.jpg" target="_blank">
-                                    <img class="card-img" src="img/상세페이지.jpg" alt="포스터7" loading="lazy" />
-                                </a>
-                            </figure>
-                        </div>
-
-                        <div class="card-item">
-                            <div class="card-circle"><img src="img/photo.svg" alt="포토샵" /></div>
-                            <h3 class="card-title">애견동반 펜션 포스터</h3>
-                            <p class="card-desc">
-                                포토샵을 활용한 애견동반 펜션 포스터를 제작하였습니다.
-                            </p>
-                            <figure class="card-figure">
-                                <img class="card-img" src="img/photo.jpg" alt="포스터8" loading="lazy" />
-                            </figure>
-                        </div>
-
                     </div>
-                </div>
+
+                    <div class="project-right">
+                        <div class="cards-grid">
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/web/포스터.jpg" alt="Architecture 1">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>청년아 모여라</h3>
+                                        <p>일러스트 3D입체화 효과로 만든 3D글씨포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/ai.svg" alt="Architecture 1"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/web/sowon2.png" alt="포스터2">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>sowon</h3>
+                                        <p>일러스트 부풀리기 효과로 포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/ai.svg" alt="일러스트"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/web/you1.jpg" alt="포스터3">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>유한킴벌리 채용공고 포스터</h3>
+                                        <p>일러스트의 블렌드 모드를 이용하여 피그마와 함께 유한킴벌리의 채용공고 포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/ai.svg" alt="일러스트"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/web/flower.jpg" alt="포스터4">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>flower 3D포스터</h3>
+                                        <p>일러스트 3D+아트매핑기술로 포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/ai.svg" alt="일러스트"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/web/pajama.jpg" alt="포스터5">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>파자마 쇼핑몰 포스터</h3>
+                                        <p>포토샵을 활용한 파자마 쇼핑몰 포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/photo.svg" alt="포토샵"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/헬로우슬립.gif" alt="포스터6">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>헬로우 슬립</h3>
+                                        <p>포토샵을 활용한 움직이는 gif 포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/photo.svg" alt="포토샵"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <a href="img/상세페이지.jpg" target="_blank"><img src="img/web/상세페이지.jpg" alt="포스터7"></a>
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>파마자쇼핑몰 상세페이지 제작 <br /> (이미지를 클릭해주세요)</h3>
+                                        <p>포토샵을 활용한 파자마 쇼핑몰 상세페이지를 제작하였습니다.
+                                            *일부 이미지는 포트폴리오용제작목적으로 사용되었으며 출처가 있음을 밝힙니다. 출처:핀터레스트-w컨셉*</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/photo.svg" alt="포토샵"></div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="img-wrapper">
+                                    <img src="img/web/photo.jpg" alt="포스터8">
+                                </div>
+                                <div class="card-meta">
+                                    <div class="meta-left">
+                                        <h3>애견동반 펜션 포스터</h3>
+                                        <p>포토샵을 활용한 애견동반 펜션 포스터를 제작하였습니다.</p>
+                                    </div>
+                                    <div class="meta-right"><img src="img/photo.svg" alt="포토샵"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+
             </section>
 
 
@@ -1527,4 +1589,4 @@
     </div><!-- wrap end -->
 </body>
 
-</html>
+</html>
