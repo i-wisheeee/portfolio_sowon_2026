@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital@0;1&display=swap">
-    <link rel="stylesheet" href="css/main.scss">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/effects.css">
 
 
 
@@ -207,6 +207,89 @@
             });
 
 
+            //메인1 - 자기소개 DotGrid
+            const introCard = document.querySelector(".section-01 .card-cover");
+            const dotCanvas = introCard.querySelector(".dot-grid");
+            const dotCtx = dotCanvas.getContext("2d");
+            const DOT_GAP = 32, DOT_R = 2.5, DOT_PROX = 140, DOT_PUSH = 12;
+            let dots = [], dotMouse = { x: -9999, y: -9999 }, dotRaf = 0;
+
+            function drawDots() {
+                dotCtx.clearRect(0, 0, introCard.offsetWidth, introCard.offsetHeight);
+                let moving = false;
+                dots.forEach((d) => {
+                    const dx = d.x - dotMouse.x, dy = d.y - dotMouse.y;
+                    const dist = Math.hypot(dx, dy) || 1;
+                    const t = Math.max(0, 1 - dist / DOT_PROX);
+                    const tx = (dx / dist) * t * DOT_PUSH, ty = (dy / dist) * t * DOT_PUSH;
+                    d.ox += (tx - d.ox) * 0.15;
+                    d.oy += (ty - d.oy) * 0.15;
+                    if (Math.abs(tx - d.ox) > 0.05 || Math.abs(ty - d.oy) > 0.05) moving = true;
+                    dotCtx.fillStyle = t ? `rgba(91, 153, 252, ${0.35 + 0.65 * t})` : "rgba(255, 255, 255, 0.35)";
+                    dotCtx.beginPath();
+                    dotCtx.arc(d.x + d.ox, d.y + d.oy, DOT_R + t * 1.5, 0, Math.PI * 2);
+                    dotCtx.fill();
+                });
+                dotRaf = moving ? requestAnimationFrame(drawDots) : 0;
+            }
+
+            function buildDots() {
+                const w = introCard.offsetWidth, h = introCard.offsetHeight, dpr = window.devicePixelRatio || 1;
+                dotCanvas.width = w * dpr;
+                dotCanvas.height = h * dpr;
+                dotCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                dots = [];
+                for (let y = DOT_GAP / 2; y < h; y += DOT_GAP)
+                    for (let x = DOT_GAP / 2; x < w; x += DOT_GAP) dots.push({ x, y, ox: 0, oy: 0 });
+                drawDots();
+            }
+
+            introCard.addEventListener("mousemove", (e) => {
+                const rect = introCard.getBoundingClientRect();
+                dotMouse = { x: (e.clientX - rect.left) * introCard.offsetWidth / rect.width, y: (e.clientY - rect.top) * introCard.offsetHeight / rect.height };
+                if (!dotRaf) dotRaf = requestAnimationFrame(drawDots);
+            });
+            introCard.addEventListener("mouseleave", () => {
+                dotMouse = { x: -9999, y: -9999 };
+                if (!dotRaf) dotRaf = requestAnimationFrame(drawDots);
+            });
+            new ResizeObserver(buildDots).observe(introCard);
+
+            //메인1 - 자기소개 ScrollReveal
+            const introText = introCard.querySelector(".text p");
+            (function wrapWords(node) {
+                Array.from(node.childNodes).forEach((n) => {
+                    if (n.nodeType === 1) return wrapWords(n);
+                    if (n.nodeType !== 3) return;
+                    const frag = document.createDocumentFragment();
+                    n.textContent.split(/(\s+)/).forEach((part) => {
+                        if (!part) return;
+                        if (/^\s+$/.test(part)) return frag.append(part);
+                        const word = document.createElement("span");
+                        word.className = "word";
+                        word.textContent = part;
+                        frag.append(word);
+                    });
+                    n.replaceWith(frag);
+                });
+            })(introText);
+
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                gsap.fromTo(introText, { rotate: 3, transformOrigin: "0% 50%" }, {
+                    rotate: 0,
+                    ease: "none",
+                    scrollTrigger: { trigger: introText, start: "top bottom", end: "bottom bottom", scrub: true }
+                });
+                gsap.fromTo(introText.querySelectorAll(".word"), { opacity: 0.1, filter: "blur(4px)" }, {
+                    opacity: 1,
+                    filter: "blur(0px)",
+                    ease: "none",
+                    stagger: 0.05,
+                    scrollTrigger: { trigger: introText, start: "top bottom-=20%", end: "bottom bottom", scrub: true }
+                });
+            }
+
+
 
             //메인1
 
@@ -225,24 +308,131 @@
                 },
             });
 
-            // 메인2 - result 등장 애니메이션
-            $(".result").each(function (index, element) {
-                gsap.to(element, {
-                    scrollTrigger: {
-                        trigger: element,
-                        start: "top 80%",
-                        toggleActions: "play none none reverse",
-                    },
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out",
-                });
-            });
-
             // 스킬
 
+            // 스킬 - FolderFloat
+            const folders = document.querySelectorAll(".folder-float");
+            const placeItems = (ff) => {
+                const list = ff.querySelector(".folder-float__items");
+                list.style.setProperty("--ff-shift", "0px");
+                const r = list.getBoundingClientRect();
+                const vw = document.documentElement.clientWidth;
+                list.style.setProperty("--ff-shift", Math.max(8 - r.left, Math.min(0, vw - 8 - r.right)) + "px");
+            };
+            const setFolder = (ff, open) => {
+                ff.toggleAttribute("data-open", open);
+                if (open) placeItems(ff);
+                ff.querySelector(".folder-float__trigger").setAttribute("aria-expanded", open);
+            };
 
+            folders.forEach((ff) => {
+                const trigger = ff.querySelector(".folder-float__trigger");
+                ff.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") setFolder(ff, true); });
+                ff.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setFolder(ff, false); });
+                trigger.addEventListener("focus", () => { if (trigger.matches(":focus-visible")) setFolder(ff, true); });
+                trigger.addEventListener("blur", () => setFolder(ff, false));
+                trigger.addEventListener("click", (e) => {
+                    if (e.pointerType === "mouse") return;
+                    const open = !ff.hasAttribute("data-open");
+                    folders.forEach((other) => setFolder(other, false));
+                    setFolder(ff, open);
+                });
+                ff.addEventListener("keydown", (e) => { if (e.key === "Escape") setFolder(ff, false); });
+            });
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest(".folder-float")) folders.forEach((ff) => setFolder(ff, false));
+            });
+
+
+
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                gsap.registerPlugin(SplitText);
+                document.querySelectorAll(".section-01 h2, .section-03 .con01 h2, .section-05 .project-title").forEach((title) => {
+                    SplitText.create(title, {
+                        type: "words, chars",
+                        mask: "chars",
+                        autoSplit: true,
+                        onSplit: (self) => gsap.from(self.chars, {
+                            yPercent: 100,
+                            duration: 0.6,
+                            ease: "power3.out",
+                            stagger: 0.03,
+                            scrollTrigger: { trigger: title, start: "top 85%", once: true },
+                        }),
+                    });
+                });
+            }
+
+            const lanyardBox = document.querySelector("#design .lanyard");
+            if (lanyardBox && location.protocol !== "file:") {
+                const lanyardIo = new IntersectionObserver(([entry]) => {
+                    if (!entry.isIntersecting) return;
+                    lanyardIo.disconnect();
+                    import("./js/lanyard.js").then((m) => m.mountLanyard(lanyardBox)).catch(() => {});
+                }, { threshold: 0.25 });
+                lanyardIo.observe(lanyardBox);
+            }
+
+            const resumeSheet = document.querySelector(".section-02 #tech");
+            if (resumeSheet && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                resumeSheet.classList.add("is-folding");
+                ScrollTrigger.create({
+                    trigger: resumeSheet,
+                    start: "top 75%",
+                    end: "+=100000",
+                    once: true,
+                    onEnter: () => {
+                        const height = resumeSheet.offsetHeight;
+                        const part = Math.round(height / 3);
+                        const source = resumeSheet.cloneNode(true);
+                        source.classList.remove("is-folding");
+                        source.style.cssText = `position:absolute;left:0;top:0;width:${resumeSheet.offsetWidth}px;height:${height}px;margin:0;opacity:1;transform:none;`;
+                        const panel = (top, offset, size, withBack) => {
+                            const el = document.createElement("div");
+                            el.className = "fold__panel";
+                            el.style.top = `${top}px`;
+                            el.style.height = `${size}px`;
+                            const clip = document.createElement("div");
+                            clip.className = "fold__clip";
+                            const copy = source.cloneNode(true);
+                            copy.style.top = `${-offset}px`;
+                            const shade = document.createElement("div");
+                            shade.className = "fold__shade";
+                            clip.append(copy, shade);
+                            el.append(clip);
+                            if (withBack) {
+                                const back = document.createElement("div");
+                                back.className = "fold__back";
+                                el.append(back);
+                            }
+                            return el;
+                        };
+                        const fold = document.createElement("div");
+                        fold.className = "fold";
+                        fold.setAttribute("aria-hidden", "true");
+                        const top = panel(0, 0, part, false);
+                        const middle = panel(part, part, part, true);
+                        const bottom = panel(part, part * 2, height - part * 2, true);
+                        middle.append(bottom);
+                        fold.append(top, middle);
+                        resumeSheet.append(fold);
+                        gsap.set([middle, bottom], { transformOrigin: "50% 0%" });
+                        gsap.set(middle, { rotationX: -178 });
+                        gsap.set(bottom, { rotationX: 178 });
+                        gsap.set(fold.querySelectorAll(".fold__shade"), { opacity: 0.35 });
+                        gsap.timeline({
+                            onComplete: () => {
+                                fold.remove();
+                                resumeSheet.classList.remove("is-folding");
+                            },
+                        })
+                            .from(fold, { opacity: 0, y: 30, duration: 0.4, ease: "power2.out" })
+                            .to(middle, { rotationX: 0, duration: 0.9, ease: "power2.inOut" })
+                            .to(bottom, { rotationX: 0, duration: 0.9, ease: "power2.inOut" }, "-=0.45")
+                            .to(fold.querySelectorAll(".fold__shade"), { opacity: 0, duration: 0.6, stagger: 0.2 }, "-=1");
+                    },
+                });
+            }
 
             //메인3
 
@@ -624,6 +814,7 @@
 
 
                 <div class="card-cover">
+                    <canvas class="dot-grid" aria-hidden="true"></canvas>
 
                     <div class="text">
                         <h2>Connecting the Dots:<br /> From Structure to Experience</h2>
@@ -654,10 +845,11 @@
             <section class="section-02" id="section-02" data-aos="zoom-in-up" data-aos-delay="400">
                 <div class="inner">
                     <section class="card" id="design">
-                        <div class="icon">👩🏻‍💻</div>
 
                         <div class="image">
-                            <img src="img/me.jpg" alt="증명사진">
+                            <div class="lanyard">
+                                <img src="img/me.jpg" alt="증명사진">
+                            </div>
                             <ul class="contact">
                                 <li class="group">
                                     <ul class="name">
@@ -686,7 +878,6 @@
 
 
                     <div class="card" id="tech">
-                        <div class="icon">💻</div>
                         <div class="item">
                             <h2>Education</h2>
                             <ul class="depth-01">
@@ -708,6 +899,7 @@
                         <div class="item">
                             <h2>Experience</h2>
                             <ul class="depth-01">
+                                <li><span class="bold">2026.03-2026.10</span> (주)비즈폼 웹디자인&퍼블리셔 근무</li>
                                 <li><span class="bold">2021.03-2025.03</span> 신세계인터네셔널 SSG.COM 근무</li>
                                 <li><span class="bold">2020.11-2021.03</span> 쿠팡물류센터 근무</li>
                                 <li><span class="bold">2019.06-2020.05</span> 롯데백화점 MVG라운지 근무</li>
@@ -735,27 +927,6 @@
 
 
                     </div><!-- card tech -->
-                    <div class="result" id="result">
-                        <div class="item">
-                            <h2>Skills</h2>
-                            <p><span>HTML5</span>를 이용하여 접근성을 고려한 마크업 작성이 가능하며, 반응형 웹페이지 생성과 웹 기본 구조 이해가 가능합니다.
-                                <span>Photoshop</span>을 활용한 사진 편집 및 보정, 디자인 시안 제작과
-                                <span>Figma</span>의 프로토타입 구현으로 화면을 시뮬레이션하고 시각화하는 기능을 배웠으며,
-                                웹, 앱, <span>인터페이스 디자인</span> 및 스토리보드 제작이 가능합니다. 또한
-                                <span>CSS</span> 반응형 디자인 구현과 <span>JavaScript</span>를 이용한 웹페이지 기능 동작 구현이 가능합니다.
-                                <span>Visual Studio Code</span>를 활용해 코드를 작성하고 관리하며,
-                                <span>Sass</span>, <span>jQuery</span>를 이용해 반응형 웹사이트와 동적 인터페이스를 구현할 수 있습니다.
-                                <span>Notion</span>을 통해 프로젝트를 정리하고, <span>Adobe Express</span>와
-                                <span>Illustrator</span>를 활용하여 디자인을 보완할 수 있으며,
-                                <span>GitHub</span>로 버전 관리까지 수행할 수 있습니다.
-
-
-                            </p>
-                        </div><!-- .item end -->
-
-
-
-                    </div><!--result end  -->
 
 
                 </div><!-- .inner -->
@@ -769,18 +940,201 @@
 
                 <!-- skill -->
                 <div class="skill_box">
-                    <div class="glass"><img src="img/2adobi.png" alt="adobe"></div>
-                    <div class="glass"><img src="img/2ai.png" alt="ai"></div>
-                    <div class="glass"><img src="img/2figma.png" alt="figma"></div>
-                    <div class="glass"><img src="img/2git.png" alt="git"></div>
-                    <div class="glass"><img src="img/2html5.svg" alt="html"></div>
-                    <div class="glass"><img src="img/2jquery.svg" alt="jQuery"></div>
-                    <div class="glass"><img src="img/2js.svg" alt="JavaScript"></div>
-                    <div class="glass"><img src="img/2notion.png" alt="notion"></div>
-                    <div class="glass"><img src="img/2ps.png" alt="Photoshop"></div>
-                    <div class="glass"><img src="img/2scss.png" alt="scss"></div>
-                    <div class="glass"><img src="img/2visual.png" alt="Visual"></div>
-                    <div class="glass"><img src="img/css3.png" alt="css"></div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-html5" aria-label="HTML5 키워드">
+                                <li class="folder-float__item" style="--i:0">웹 접근성 마크업</li>
+                                <li class="folder-float__item" style="--i:1">시맨틱 구조</li>
+                                <li class="folder-float__item" style="--i:2">반응형 웹페이지</li>
+                                <li class="folder-float__item" style="--i:3">웹 기본 구조 이해</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2html5.svg" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-html5" aria-expanded="false">HTML5</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">HTML5</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-css" aria-label="CSS 키워드">
+                                <li class="folder-float__item" style="--i:0">반응형 레이아웃</li>
+                                <li class="folder-float__item" style="--i:1">크로스브라우징</li>
+                                <li class="folder-float__item" style="--i:2">반응형 디자인 구현</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/css3.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-css" aria-expanded="false">CSS</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">CSS</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-sass" aria-label="Sass 키워드">
+                                <li class="folder-float__item" style="--i:0">변수·믹스인</li>
+                                <li class="folder-float__item" style="--i:1">스타일 구조화</li>
+                                <li class="folder-float__item" style="--i:2">반응형 웹사이트</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2scss.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-sass" aria-expanded="false">Sass</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">Sass</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-js" aria-label="JavaScript 키워드">
+                                <li class="folder-float__item" style="--i:0">웹페이지 기능·동작 구현</li>
+                                <li class="folder-float__item" style="--i:1">동적 인터페이스</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2js.svg" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-js" aria-expanded="false">JavaScript</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">JavaScript</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-jquery" aria-label="jQuery 키워드">
+                                <li class="folder-float__item" style="--i:0">슬라이드</li>
+                                <li class="folder-float__item" style="--i:1">탭</li>
+                                <li class="folder-float__item" style="--i:2">모달 인터랙션</li>
+                                <li class="folder-float__item" style="--i:3">동적 인터페이스</li>
+                                <li class="folder-float__item" style="--i:4">반응형 웹사이트</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2jquery.svg" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-jquery" aria-expanded="false">jQuery</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">jQuery</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-gsap" aria-label="GSAP 키워드">
+                                <li class="folder-float__item" style="--i:0">스크롤 인터랙션</li>
+                                <li class="folder-float__item" style="--i:1">타임라인 애니메이션</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/gsap.svg" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-gsap" aria-expanded="false">GSAP</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">GSAP</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-figma" aria-label="Figma 키워드">
+                                <li class="folder-float__item" style="--i:0">UI 디자인</li>
+                                <li class="folder-float__item" style="--i:1">프로토타입</li>
+                                <li class="folder-float__item" style="--i:2">스토리보드</li>
+                                <li class="folder-float__item" style="--i:3">화면 시뮬레이션</li>
+                                <li class="folder-float__item" style="--i:4">웹·앱 인터페이스 디자인</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2figma.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-figma" aria-expanded="false">Figma</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">Figma</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-ps" aria-label="Photoshop 키워드">
+                                <li class="folder-float__item" style="--i:0">사진 보정</li>
+                                <li class="folder-float__item" style="--i:1">디자인 시안 제작</li>
+                                <li class="folder-float__item" style="--i:2">상세페이지 제작</li>
+                                <li class="folder-float__item" style="--i:3">GIF 포스터</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2ps.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-ps" aria-expanded="false">Photoshop</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">Photoshop</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-ai" aria-label="Illustrator 키워드">
+                                <li class="folder-float__item" style="--i:0">벡터 그래픽</li>
+                                <li class="folder-float__item" style="--i:1">아이콘·로고</li>
+                                <li class="folder-float__item" style="--i:2">3D 입체 효과</li>
+                                <li class="folder-float__item" style="--i:3">부풀리기 효과</li>
+                                <li class="folder-float__item" style="--i:4">블렌드 모드</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2ai.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-ai" aria-expanded="false">Illustrator</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">Illustrator</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-express" aria-label="Adobe Express 키워드">
+                                <li class="folder-float__item" style="--i:0">배너·SNS 콘텐츠 제작</li>
+                                <li class="folder-float__item" style="--i:1">디자인 보완</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2adobi.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-express" aria-expanded="false">Adobe Express</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">Adobe Express</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-vscode" aria-label="VS Code 키워드">
+                                <li class="folder-float__item" style="--i:0">코드 작성·관리</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2visual.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-vscode" aria-expanded="false">VS Code</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">VS Code</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-github" aria-label="GitHub 키워드">
+                                <li class="folder-float__item" style="--i:0">버전 관리</li>
+                                <li class="folder-float__item" style="--i:1">Pages 배포</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2git.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-github" aria-expanded="false">GitHub</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">GitHub</span>
+                    </div>
+                    <div class="folder-float">
+                        <div class="folder-float__folder">
+                            <span class="folder-float__back" aria-hidden="true"></span>
+                            <ul class="folder-float__items" id="skill-notion" aria-label="Notion 키워드">
+                                <li class="folder-float__item" style="--i:0">프로젝트 일정·자료 정리</li>
+                            </ul>
+                            <span class="folder-float__front" aria-hidden="true">
+                                <img class="folder-float__label" src="img/2notion.png" alt="">
+                            </span>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-notion" aria-expanded="false">Notion</button>
+                        </div>
+                        <span class="folder-float__name" aria-hidden="true">Notion</span>
+                    </div>
                 </div><!-- skill_box end -->
 
 
@@ -790,8 +1144,7 @@
 
 
                 <section class="con01">
-                    <h2 data-aos="fade-right" data-aos-delay="700"><span data-aos="fade-right"
-                            data-aos-delay="600">My</span>Project</h2>
+                    <h2><span>My</span>Project</h2>
                 </section><!-- con01 end -->
 
                 <div class="con02">

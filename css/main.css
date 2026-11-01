@@ -419,8 +419,7 @@ body {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
   border: 0.1rem solid var(--stroke);
   box-shadow: var(--shadow-strong);
-  -webkit-backdrop-filter: blur(1.7rem);
-          backdrop-filter: blur(1.7rem);
+  backdrop-filter: blur(1.7rem);
   overflow: hidden;
   align-items: center;
 }
@@ -443,7 +442,6 @@ body {
   font-size: 2rem;
   text-align: center;
   line-height: 2.4;
-  margin-bottom: 6rem;
 }
 .section-01 .card-cover .text p span {
   background-color: rgba(29, 113, 165, 0.6078431373);
@@ -451,6 +449,9 @@ body {
   border-radius: 1rem;
   color: #eaeaea;
   font-size: 2.4rem;
+}
+.section-01 .card-cover .text p {
+  margin-bottom: 6rem;
 }
 .section-01 .card-cover .text .highlight {
   font-size: 3rem;
@@ -495,7 +496,6 @@ body {
     color: #4f55b3;
     font-size: 2.4rem;
     font-weight: bold;
-    margin-bottom: 7rem;
   }
   .section-01 .card-cover .text p span {
     background-color: #eaf7ba;
@@ -505,6 +505,9 @@ body {
     padding: 0.5rem 2rem;
     font-size: 2.4rem;
     line-height: 1.7;
+  }
+  .section-01 .card-cover .text p {
+    margin-bottom: 7rem;
   }
 }
 @media (max-width: 900px) {
@@ -529,11 +532,13 @@ body {
     font-size: 1.8rem;
     line-height: 1.8;
     text-align: left;
-    margin-bottom: 3rem;
   }
   .section-01 .card-cover .text p span {
     padding: 0.2rem 1rem;
     font-size: 2rem;
+  }
+  .section-01 .card-cover .text p {
+    margin-bottom: 3rem;
   }
 }
 @media (max-width: 760px) {
@@ -558,11 +563,13 @@ body {
     font-size: 1.4rem;
     line-height: 1.8;
     text-align: left;
-    margin-bottom: 3rem;
   }
   .section-01 .card-cover .text p span {
     padding: 0.2rem 1rem;
     font-size: 1.8rem;
+  }
+  .section-01 .card-cover .text p {
+    margin-bottom: 3rem;
   }
   .section-01 .card-cover .text .highlight {
     font-size: 2.4rem;
@@ -594,11 +601,13 @@ body {
     font-size: 1.2rem;
     line-height: 1.4;
     text-align: left;
-    margin-bottom: 3rem;
   }
   .section-01 .card-cover .text p span {
     padding: 0.2rem 1rem;
     font-size: 1.4rem;
+  }
+  .section-01 .card-cover .text p {
+    margin-bottom: 3rem;
   }
   .section-01 .card-cover .text .highlight {
     font-size: 2.4rem;
@@ -729,6 +738,9 @@ body {
   letter-spacing: 0.5rem;
   display: block;
 }
+.section-02 .inner #tech .icon {
+  margin: 0 5rem 3rem 0;
+}
 .section-02 .inner #tech {
   grid-column: 2;
   grid-row: 1;
@@ -737,9 +749,6 @@ body {
   display: flex;
   text-align: center;
   justify-content: space-between;
-}
-.section-02 .inner #tech .icon {
-  margin: 0 5rem 3rem 0;
 }
 .section-02 .inner #tech .item {
   width: 80%;
@@ -796,15 +805,6 @@ body {
   flex-direction: column;
   font-weight: 700;
 }
-.section-02 .inner #tech .item .dpth-02 {
-  display: flex;
-  justify-content: flex-start;
-  text-align: left;
-  gap: 1rem;
-  flex-wrap: wrap;
-  font-size: 1.8rem;
-  color: #11004e;
-}
 .section-02 .inner #tech .item .dpth-02 h2 {
   -webkit-text-stroke: 0.1rem #000;
   font-size: 2.4rem;
@@ -816,6 +816,15 @@ body {
 .section-02 .inner #tech .item .dpth-02 li .bold {
   font-weight: bold;
 }
+.section-02 .inner #tech .item .dpth-02 {
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 1.8rem;
+  color: #11004e;
+}
 .section-02 .inner #tech .item .dpth-02 .mov {
   line-height: 1.5;
 }
@@ -823,53 +832,13 @@ body {
   display: block;
   margin-bottom: 0.5rem;
 }
-.section-02 #result {
-  align-items: center;
-  display: flex;
-  padding: 100vh 0;
-  grid-column: 1/span 2;
-  grid-row: 2;
-  width: 100%;
-  height: 30rem;
-  margin-top: 2rem;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(143, 143, 143, 0.08));
-  border: 0.1rem solid var(--stroke);
-  border-radius: 1.4rem;
-  padding: 0;
-  opacity: 0;
-  -webkit-backdrop-filter: blur(0.8rem);
-          backdrop-filter: blur(0.8rem);
-}
-.section-02 #result .item {
-  width: 80%;
-  margin: 0 auto;
-  color: #11004e;
-  display: flex;
-  flex-direction: column;
-}
-.section-02 #result .item h2 {
-  font-size: 3rem;
-  margin-bottom: 2rem;
-  font-weight: bold;
-  -webkit-text-stroke: 0.1rem #000;
-  -webkit-text-fill-color: #f1ffc0;
-}
-.section-02 #result .item p {
-  font-size: 1.8rem;
-  text-align: left;
-  line-height: 1.7;
-}
-.section-02 #result .item p span {
-  font-weight: bold;
-}
 .section-02 .card {
   background: linear-gradient(180deg, var(--glass), var(--glass-2));
   border: 0.1rem solid var(--stroke);
   border-radius: 1.6rem;
   padding: 2.8rem 2.6rem 2.6rem;
   box-shadow: var(--shadow-strong);
-  -webkit-backdrop-filter: blur(1rem);
-          backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
   transform: translateY(4rem) scale(0.98);
   opacity: 0;
   position: relative;
@@ -1026,27 +995,6 @@ body {
   }
   .section-02 .inner #design .contact button {
     width: 80%;
-  }
-  .section-02 #result {
-    height: 45rem;
-    margin-top: 20rem;
-  }
-  .section-02 #result .item {
-    width: 80%;
-    margin: 0 auto;
-  }
-  .section-02 #result .item h2 {
-    font-size: 3rem;
-    margin-bottom: 5rem;
-  }
-  .section-02 #result .item p {
-    font-size: 1.4rem;
-    text-align: left;
-    line-height: 1.7;
-  }
-  .section-02 #result .item p span {
-    font-weight: bold;
-    color: #000;
   }
   .section-02 .skill_box {
     width: 80%;
@@ -1582,8 +1530,7 @@ body {
     height: 80%;
   }
 }
-
-
+/* 메인5 - section-05 */
 #projects {
   display: flex;
   flex-wrap: wrap;
@@ -1668,12 +1615,14 @@ body {
 .project-right {
   width: 60%;
   height: 100vh;
-  overflow: hidden; 
+  overflow: hidden;
   position: relative;
 }
+
 .project-right img {
   width: 20px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 /* GRID */
@@ -1690,9 +1639,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  cursor: pointer;
-  group: hover; /* Setup for hover effects */
-}
+  cursor: pointer;}
 
 /* Image styling */
 .img-wrapper {
@@ -1705,7 +1652,8 @@ body {
 .img-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
@@ -1718,7 +1666,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-top: 1px solid rgba(0,0,0,0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-top: 1.6rem;
 }
 
@@ -1747,31 +1695,23 @@ body {
     flex-direction: column;
     height: auto !important;
   }
-
   .project-left, .project-right {
     width: 100%;
     height: auto;
     padding: 3.2rem;
   }
-  
   .project-left {
     padding-top: 6.4rem;
     align-items: flex-start;
   }
-
   .cards-grid {
     grid-template-columns: 1fr;
     padding: 0;
   }
-  
   .project-title {
     font-size: 4rem;
   }
 }
-
-
-
-
 .topbtn {
   display: none;
   position: fixed;
@@ -1982,6 +1922,9 @@ body {
   height: auto;
   margin: 0 auto;
 }
+.footer .footnav .gnb > li .depth-02 li em {
+  font-weight: 900;
+}
 .footer .footnav .gnb > li .depth-02 li {
   text-align: left;
   color: black;
@@ -1993,9 +1936,6 @@ body {
   border-radius: 1rem;
   align-items: center;
   padding: 2rem;
-}
-.footer .footnav .gnb > li .depth-02 li em {
-  font-weight: 900;
 }
 .footer .footnav .gnb > li .depth-02 li a {
   display: block;
@@ -2036,7 +1976,6 @@ body {
     transform: translateX(-100%);
   }
 }
-
 /* 반응형 보완 */
 .footer {
   overflow-x: hidden;
@@ -2178,5 +2117,4 @@ body {
   .footer .utill .menu ul li {
     font-size: 2.2rem;
   }
-}
-/*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */
