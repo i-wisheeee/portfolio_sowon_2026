@@ -256,7 +256,7 @@
             new ResizeObserver(buildDots).observe(introCard);
 
             //메인1 - 자기소개 ScrollReveal
-            const introText = introCard.querySelector(".text p");
+            const introText = introCard.querySelector(".text .steps");
             (function wrapWords(node) {
                 Array.from(node.childNodes).forEach((n) => {
                     if (n.nodeType === 1) return wrapWords(n);
@@ -818,18 +818,23 @@
 
                     <div class="text">
                         <h2>Connecting the Dots:<br /> From Structure to Experience</h2>
-                        <p>
-                            <span>'점'</span> 하나하나가 모여 <span>'선'</span>을 이루고, 그 선이 이어져 하나의 <span>'화면'</span>이 됩니다.<br />
-                            퍼블리싱은 그 <span>‘연결의
-                                과정’</span>입니다.<br />
-                            단순한 연결 속에서 기술은 경험이 되고, 감성은 구조 속에서 완성됩니다. <br /> 그리고 그 모든 흐름 안에는 저의 <span>시간</span>이
-                            있습니다.<br />
-                            <span>시행착오와 탐색의 흔적 등, 작은 점</span>이 쌓여 지금의 저를 만들었습니다.<br />
-
-                            구조를 설계하고 감성을 구현하는 사람, 그 과정 속에서 쌓인 감각과 기술,<br /> 그것이 <span>"지금의 나를 만든 선"</span>이며, 저는 그
-                            모든 <br />
-                            경험을 연결해 <span>현재의 세상을 디자인하고 구현해 내는 웹 퍼블리셔</span>입니다.
-                        </p>
+                        <ol class="steps">
+                            <li>
+                                <i class="mark mark--dot" aria-hidden="true"></i>
+                                <strong>점.</strong>
+                                <p>시행착오와 탐색의 흔적,<br />작은 점들이 쌓여 지금의 저를 만들었습니다.</p>
+                            </li>
+                            <li>
+                                <i class="mark mark--line" aria-hidden="true"></i>
+                                <strong>선.</strong>
+                                <p>그 점을 잇는 건 구조를 설계하는 일,<br />퍼블리싱은 그 연결의 과정입니다.</p>
+                            </li>
+                            <li>
+                                <i class="mark mark--screen" aria-hidden="true"></i>
+                                <strong>화면.</strong>
+                                <p>기술은 경험이 되고, 감성은 구조 속에서 완성됩니다.<br />모든 경험을 연결해 화면을 만드는 <span>웹 퍼블리셔 김소원</span>입니다.</p>
+                            </li>
+                        </ol>
                         <span class="highlight">앞으로 저와의 여정을 함께해 주세요.</span>
                         <em><img src="img/ArrowDown.png" alt="화살표밑"></em>
                     </div><!-- .text end -->
@@ -943,197 +948,71 @@
                     <div class="folder-float">
                         <div class="folder-float__folder">
                             <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-html5" aria-label="HTML5 키워드">
-                                <li class="folder-float__item" style="--i:0">웹 접근성 마크업</li>
-                                <li class="folder-float__item" style="--i:1">시맨틱 구조</li>
-                                <li class="folder-float__item" style="--i:2">반응형 웹페이지</li>
-                                <li class="folder-float__item" style="--i:3">웹 기본 구조 이해</li>
+                            <ul class="folder-float__items" id="skill-markup" aria-label="Markup &amp; Styling 키워드">
+                                <li class="folder-float__item" style="--i:0">HTML5</li>
+                                <li class="folder-float__item" style="--i:1">CSS</li>
+                                <li class="folder-float__item" style="--i:2">SCSS</li>
+                                <li class="folder-float__item" style="--i:3">웹 접근성 마크업</li>
+                                <li class="folder-float__item" style="--i:4">반응형 웹</li>
                             </ul>
                             <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2html5.svg" alt="">
+                                <span class="folder-float__num">01</span>
                             </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-html5" aria-expanded="false">HTML5</button>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-markup" aria-expanded="false">Markup &amp; Styling</button>
                         </div>
-                        <span class="folder-float__name" aria-hidden="true">HTML5</span>
+                        <span class="folder-float__name" aria-hidden="true">Markup &amp; Styling</span>
                     </div>
                     <div class="folder-float">
                         <div class="folder-float__folder">
                             <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-css" aria-label="CSS 키워드">
-                                <li class="folder-float__item" style="--i:0">반응형 레이아웃</li>
-                                <li class="folder-float__item" style="--i:1">크로스브라우징</li>
-                                <li class="folder-float__item" style="--i:2">반응형 디자인 구현</li>
+                            <ul class="folder-float__items" id="skill-interaction" aria-label="Interaction &amp; Motion 키워드">
+                                <li class="folder-float__item" style="--i:0">JavaScript</li>
+                                <li class="folder-float__item" style="--i:1">jQuery</li>
+                                <li class="folder-float__item" style="--i:2">GSAP</li>
+                                <li class="folder-float__item" style="--i:3">슬라이더</li>
+                                <li class="folder-float__item" style="--i:4">스크롤 인터랙션</li>
                             </ul>
                             <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/css3.png" alt="">
+                                <span class="folder-float__num">02</span>
                             </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-css" aria-expanded="false">CSS</button>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-interaction" aria-expanded="false">Interaction &amp; Motion</button>
                         </div>
-                        <span class="folder-float__name" aria-hidden="true">CSS</span>
+                        <span class="folder-float__name" aria-hidden="true">Interaction &amp; Motion</span>
                     </div>
                     <div class="folder-float">
                         <div class="folder-float__folder">
                             <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-sass" aria-label="Sass 키워드">
-                                <li class="folder-float__item" style="--i:0">변수·믹스인</li>
-                                <li class="folder-float__item" style="--i:1">스타일 구조화</li>
-                                <li class="folder-float__item" style="--i:2">반응형 웹사이트</li>
+                            <ul class="folder-float__items" id="skill-design" aria-label="Design &amp; Graphics 키워드">
+                                <li class="folder-float__item" style="--i:0">UI/UX 디자인</li>
+                                <li class="folder-float__item" style="--i:1">배너 디자인</li>
+                                <li class="folder-float__item" style="--i:2">GIF 포스터</li>
+                                <li class="folder-float__item" style="--i:3">상세페이지</li>
+                                <li class="folder-float__item" style="--i:4">이미지 편집</li>
                             </ul>
                             <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2scss.png" alt="">
+                                <span class="folder-float__num">03</span>
                             </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-sass" aria-expanded="false">Sass</button>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-design" aria-expanded="false">Design &amp; Graphics</button>
                         </div>
-                        <span class="folder-float__name" aria-hidden="true">Sass</span>
+                        <span class="folder-float__name" aria-hidden="true">Design &amp; Graphics</span>
                     </div>
                     <div class="folder-float">
                         <div class="folder-float__folder">
                             <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-js" aria-label="JavaScript 키워드">
-                                <li class="folder-float__item" style="--i:0">웹페이지 기능·동작 구현</li>
-                                <li class="folder-float__item" style="--i:1">동적 인터페이스</li>
+                            <ul class="folder-float__items" id="skill-workflow" aria-label="Workflow &amp; Tools 키워드">
+                                <li class="folder-float__item" style="--i:0">VS Code</li>
+                                <li class="folder-float__item" style="--i:1">GitHub</li>
+                                <li class="folder-float__item" style="--i:2">Figma</li>
+                                <li class="folder-float__item" style="--i:3">Photoshop</li>
+                                <li class="folder-float__item" style="--i:4">Illustrator</li>
+                                <li class="folder-float__item" style="--i:5">Notion</li>
                             </ul>
                             <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2js.svg" alt="">
+                                <span class="folder-float__num">04</span>
                             </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-js" aria-expanded="false">JavaScript</button>
+                            <button type="button" class="folder-float__trigger" aria-controls="skill-workflow" aria-expanded="false">Workflow &amp; Tools</button>
                         </div>
-                        <span class="folder-float__name" aria-hidden="true">JavaScript</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-jquery" aria-label="jQuery 키워드">
-                                <li class="folder-float__item" style="--i:0">슬라이드</li>
-                                <li class="folder-float__item" style="--i:1">탭</li>
-                                <li class="folder-float__item" style="--i:2">모달 인터랙션</li>
-                                <li class="folder-float__item" style="--i:3">동적 인터페이스</li>
-                                <li class="folder-float__item" style="--i:4">반응형 웹사이트</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2jquery.svg" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-jquery" aria-expanded="false">jQuery</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">jQuery</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-gsap" aria-label="GSAP 키워드">
-                                <li class="folder-float__item" style="--i:0">스크롤 인터랙션</li>
-                                <li class="folder-float__item" style="--i:1">타임라인 애니메이션</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/gsap.svg" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-gsap" aria-expanded="false">GSAP</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">GSAP</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-figma" aria-label="Figma 키워드">
-                                <li class="folder-float__item" style="--i:0">UI 디자인</li>
-                                <li class="folder-float__item" style="--i:1">프로토타입</li>
-                                <li class="folder-float__item" style="--i:2">스토리보드</li>
-                                <li class="folder-float__item" style="--i:3">화면 시뮬레이션</li>
-                                <li class="folder-float__item" style="--i:4">웹·앱 인터페이스 디자인</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2figma.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-figma" aria-expanded="false">Figma</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Figma</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-ps" aria-label="Photoshop 키워드">
-                                <li class="folder-float__item" style="--i:0">사진 보정</li>
-                                <li class="folder-float__item" style="--i:1">디자인 시안 제작</li>
-                                <li class="folder-float__item" style="--i:2">상세페이지 제작</li>
-                                <li class="folder-float__item" style="--i:3">GIF 포스터</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2ps.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-ps" aria-expanded="false">Photoshop</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Photoshop</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-ai" aria-label="Illustrator 키워드">
-                                <li class="folder-float__item" style="--i:0">벡터 그래픽</li>
-                                <li class="folder-float__item" style="--i:1">아이콘·로고</li>
-                                <li class="folder-float__item" style="--i:2">3D 입체 효과</li>
-                                <li class="folder-float__item" style="--i:3">부풀리기 효과</li>
-                                <li class="folder-float__item" style="--i:4">블렌드 모드</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2ai.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-ai" aria-expanded="false">Illustrator</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Illustrator</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-express" aria-label="Adobe Express 키워드">
-                                <li class="folder-float__item" style="--i:0">배너·SNS 콘텐츠 제작</li>
-                                <li class="folder-float__item" style="--i:1">디자인 보완</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2adobi.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-express" aria-expanded="false">Adobe Express</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Adobe Express</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-vscode" aria-label="VS Code 키워드">
-                                <li class="folder-float__item" style="--i:0">코드 작성·관리</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2visual.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-vscode" aria-expanded="false">VS Code</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">VS Code</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-github" aria-label="GitHub 키워드">
-                                <li class="folder-float__item" style="--i:0">버전 관리</li>
-                                <li class="folder-float__item" style="--i:1">Pages 배포</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2git.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-github" aria-expanded="false">GitHub</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">GitHub</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-notion" aria-label="Notion 키워드">
-                                <li class="folder-float__item" style="--i:0">프로젝트 일정·자료 정리</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <img class="folder-float__label" src="img/2notion.png" alt="">
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-notion" aria-expanded="false">Notion</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Notion</span>
+                        <span class="folder-float__name" aria-hidden="true">Workflow &amp; Tools</span>
                     </div>
                 </div><!-- skill_box end -->
 
