@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>김소원포트폴리오</title>
+    <title>김소원 포트폴리오 | 웹 퍼블리셔</title>
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital@0;1&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Nunito:wght@800&family=Playfair+Display:ital@0;1&display=swap">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/effects.css">
 
@@ -22,10 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/ScrollTrigger.min.js"></script>
     <script src="lib/SplitText.min.js"></script>
-    <script src="lib/ScrollToPlugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@latest/bundled/lenis.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
     <script>
         $(function () {
             AOS.init();
@@ -107,189 +104,131 @@
             gsap.ticker.add((time) => lenis.raf(time * 1000));
             gsap.ticker.lagSmoothing(0);
 
-            // 초기 emoji 위치
-            $(".emo").each(function () {
-                gsap.set($(this), {
-                    x: $(this).attr("data-x"),
-                    y: $(this).attr("data-y"),
-                    rotate: $(this).attr("data-rotate"),
-                    zIndex: $(this).attr("data-z") || 1
+
+            (function () {
+                const wrapper = document.querySelector(".confetti");
+                const hero = document.querySelector(".main_visual");
+                const title = document.querySelector(".textox");
+                const menu = document.querySelector(".menu3");
+                const btns = [...menu.children];
+                const targets = ["#section-01", "#work", "#footer"];
+                btns.forEach((b, i) => b.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    lenis.scrollTo(targets[i]);
+                }));
+                const isAnimationOk = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+                btns.forEach((b) => b.addEventListener("pointerenter", () => {
+                    if (!isAnimationOk || menu.style.pointerEvents !== "auto") return;
+                    const r = b.offsetWidth / 2;
+                    for (let i = 0; i < 14; i++) {
+                        const el = document.createElement("span");
+                        el.className = "menu3__bubble";
+                        const size = gsap.utils.random(0.8, 2.2) * 10;
+                        el.style.width = el.style.height = size + "px";
+                        b.appendChild(el);
+                        const a = Math.random() * Math.PI * 2;
+                        const d0 = r * 0.9, d1 = r + gsap.utils.random(20, 70);
+                        gsap.fromTo(el,
+                            { x: Math.cos(a) * d0 - size / 2, y: Math.sin(a) * d0 - size / 2, scale: 0, opacity: 1 },
+                            {
+                                x: Math.cos(a) * d1 - size / 2, y: Math.sin(a) * d1 - size / 2 - gsap.utils.random(10, 40), scale: 1, duration: gsap.utils.random(0.4, 0.7), ease: "back.out(2)", delay: Math.random() * 0.15,
+                                onComplete: () => gsap.to(el, { scale: 1.6, opacity: 0, duration: 0.2, onComplete: () => el.remove() })
+                            });
+                    }
+                }));
+                const icons = ["main_1", "main_2", "jeju", "main_3", "main_5", "main_6", "main_7", "lotte", "main_9", "main_10", "main_8"].map((n) => `img/${n}.png`).concat(["🐾", "✨", "🩷", "🖤", "💻", "🏊🏻‍♀️"]);
+                const N = icons.length;
+                const START = 0.08, END = 0.6, M_START = 0.45, M_END = 0.7, STACK_SCALE = 0.82, PX = 2.6, PY = 2.2;
+                const BIG = ["img/jeju.png", "img/main_3.png", "img/lotte.png", "img/main_2.png"];
+                const BURST = ["🐾", "✨", "🩷", "🖤", "💻", "🏊🏻‍♀️"];
+                const clamp = (v) => Math.min(1, Math.max(0, v));
+                const jitter = (i, k) => Math.sin((i + 1) * k);
+
+                const items = icons.map((icon, i) => {
+                    const el = document.createElement("span");
+                    el.className = "confetti__item";
+                    if (BIG.includes(icon)) el.classList.add("is-big");
+                    el.innerHTML = icon.startsWith("img/") ? `<img src="${icon}" alt="">` : icon;
+                    wrapper.appendChild(el);
+                    const slot = (i * 7) % N;
+                    const top = slot < 9;
+                    const k = top ? slot : slot - 9;
+                    return {
+                        el,
+                        sx: jitter(i, 12.9) * 15, sy: jitter(i, 78.2) * 12, sr: jitter(i, 37.7) * 18,
+                        intro: { s: isAnimationOk ? 0 : 1, y: isAnimationOk ? 7 : 0 },
+                        ex: top ? -42 + k * 10.5 : -37 + k * 10.5,
+                        ey: top ? -(20 + (k % 3) * 7) : 20 + ((k + 1) % 3) * 7,
+                        depth: 0.55 + (i / (N - 1)) * 0.75,
+                    };
                 });
-            });
 
-            // emoji 스크롤 애니메이션
-            gsap.utils.toArray(".emo").forEach((emoji) => {
-                gsap.from(emoji, {
-                    scrollTrigger: {
-                        trigger: ".main_visual",
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: 1
-                    },
-                    x: "47vw",
-                    y: "40vh",
-                    rotate: 0
-                });
-            });
-
-            // 마우스 따라다니는 emoji
-            $(document).mousemove(function (e) {
-                $(".emo").each(function () {
-                    const bound = parseFloat($(this).attr("data-bound")) || 20;
-                    gsap.to($(this), {
-                        xPercent: map(e.pageX, 5, window.innerWidth, -bound, bound),
-                        yPercent: map(e.pageY, 50, window.innerHeight, -bound, bound),
-                        duration: 0.1
-
-                    });
-                });
-            });
-
-            // 마우스 따라 nav 이미지 움직임
-            $("#nav a").on("mousemove", function (e) {
-                const rect = this.getBoundingClientRect();
-                const $img = $(this).find("img");
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                $img.css({ left: `${x}px`, top: `${y}px` });
-            });
-
-            // 버튼 hover 효과
-            $("button").hover(
-                function () {
-                    gsap.to(".hover-btn", { y: "60%", duration: 0.1 });
-                    gsap.to("h1", { color: "#5b99fc" });
-                },
-                function () {
-                    gsap.to(".hover-btn", { y: "-100%", duration: 0.2 });
-                    gsap.to("h1", { color: "#4287f5" });
+                if (isAnimationOk) {
+                    const pop = () => {
+                        const order = items.map((_, i) => i).sort(() => Math.random() - 0.5);
+                        order.forEach((idx, n) => {
+                            const t = items[idx];
+                            gsap.to(t.intro, { s: 1, duration: gsap.utils.random(0.7, 1.1), delay: 0.3 + n * 0.16 + Math.random() * 0.12, ease: "back.out(2.4)" });
+                            gsap.to(t.intro, { y: 0, duration: gsap.utils.random(1.1, 1.6), delay: 0.3 + n * 0.16, ease: "power2.out" });
+                        });
+                    };
+                    if (document.readyState === "complete") pop(); else addEventListener("load", pop, { once: true });
                 }
-            );
 
-            // info-cont 등장
+                let tx = 0, ty = 0, px = 0, py = 0, spread = false;
+                addEventListener("pointermove", (e) => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; }, { passive: true });
+                document.addEventListener("pointerleave", () => { tx = ty = 0; });
 
+                (function frame() {
+                    const r = hero.getBoundingClientRect();
+                    const s = clamp(-r.top / Math.max(1, r.height - innerHeight));
+                    const p = clamp((s - START) / (END - START));
+                    if (p >= 0.999 && !spread) { spread = true; burst(); } else if (p <= 0.985) spread = false;
+                    const par = isAnimationOk && !matchMedia("(pointer:coarse)").matches;
+                    const live = par && spread && r.bottom > 0 && r.top < innerHeight;
+                    px += ((live ? tx : 0) - px) * 0.1;
+                    py += ((live ? ty : 0) - py) * 0.1;
+                    const now = performance.now();
+                    items.forEach((t, i) => {
+                        const d = par ? t.depth * p : 0;
+                        const bob = isAnimationOk ? Math.sin(now / 900 + i * 1.7) * (spread ? 0.8 : 0.6) : 0;
+                        const wob = isAnimationOk ? Math.sin(now / 700 + i * 2.3) * 0.4 : 0;
+                        const x = t.sx + (t.ex - t.sx) * p - px * PX * d + wob * (1 - p);
+                        const y = t.sy + (t.ey - t.sy) * p - py * PY * d + bob + t.intro.y * (1 - p);
+                        const rot = isAnimationOk ? (1 - p) * t.sr : 0;
+                        const sc = (STACK_SCALE + (1 - STACK_SCALE) * p) * t.intro.s;
+                        t.el.style.transform = `translate(calc(-50% + ${x}vw), calc(-50% + ${y}vh)) rotate(${rot}deg) scale(${sc})`;
+                    });
+                    const m = clamp((s - M_START) / (M_END - M_START));
+                    title.style.opacity = clamp((p - 0.3) / 0.35);
+                    title.style.transform = `translateY(${-14 * m}vh)`;
+                    wrapper.style.opacity = 1 - 0.8 * m;
+                    btns.forEach((b, i) => {
+                        const q = i === 1 ? clamp(m * 1.3) : clamp((m - 0.25) * 1.35);
+                        b.style.opacity = q;
+                        b.style.transform = `translateY(${(1 - q) * 6}vh) scale(${0.2 + 0.8 * q})`;
+                    });
+                    menu.style.pointerEvents = m > 0.6 ? "auto" : "none";
+                    requestAnimationFrame(frame);
+                })();
 
-            gsap.fromTo(
-                ".info-cont",
-                { autoAlpha: 0, y: 50 }, // 초기 상태: 안 보이고 아래쪽에 위치
-                {
-                    autoAlpha: 1,  // 등장하면서 보이게
-                    y: 0,          // 원래 위치로 이동
-                    duration: 1,
-                    scrollTrigger: {
-                        trigger: ".inner", // 스크롤 감지 영역
-                        start: "top 40%",        // 화면 중간쯤에서 등장
-                        toggleActions: "play none none reverse" // 스크롤 올리면 다시 사라짐
+                function burst() {
+                    if (!isAnimationOk) return;
+                    for (let i = 0; i < 28; i++) {
+                        const el = document.createElement("span");
+                        el.className = "confetti__piece";
+                        el.textContent = BURST[i % BURST.length];
+                        wrapper.appendChild(el);
+                        const a = Math.random() * Math.PI * 2, dist = gsap.utils.random(0.25, 0.5) * innerWidth;
+                        gsap.fromTo(el, { x: 0, y: 0, scale: 0, rotate: 0 }, {
+                            x: Math.cos(a) * dist, y: Math.sin(a) * dist * 0.7,
+                            scale: gsap.utils.random(0.6, 1.2), rotate: gsap.utils.random(-200, 200),
+                            duration: gsap.utils.random(0.9, 1.5), ease: "power3.out",
+                            onComplete: () => gsap.to(el, { opacity: 0, y: "+=40", duration: 0.5, onComplete: () => el.remove() })
+                        });
                     }
                 }
-            );
-
-
-
-            function map(value, inMin, inMax, outMin, outMax) {
-                value = Math.min(Math.max(value, inMin), inMax); // 범위 제한
-                return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-            }
-
-            ///메인비주얼-스크롤텍스트
-
-            gsap.to(".textBox .mask .text", {
-                backgroundSize: "100% 100%",
-                opacity: 0, // 높이를 100%로 채움
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".textBox",
-                    start: "top 70%",
-                    end: "bottom 30%",
-                    scrub: 1,
-                    //markers: true // 디버그용
-                }
-            });
-
-
-            //메인1 - 자기소개 DotGrid
-            const introCard = document.querySelector(".section-01 .card-cover");
-            const dotCanvas = introCard.querySelector(".dot-grid");
-            const dotCtx = dotCanvas.getContext("2d");
-            const DOT_GAP = 32, DOT_R = 2.5, DOT_PROX = 140, DOT_PUSH = 12;
-            let dots = [], dotMouse = { x: -9999, y: -9999 }, dotRaf = 0;
-
-            function drawDots() {
-                dotCtx.clearRect(0, 0, introCard.offsetWidth, introCard.offsetHeight);
-                let moving = false;
-                dots.forEach((d) => {
-                    const dx = d.x - dotMouse.x, dy = d.y - dotMouse.y;
-                    const dist = Math.hypot(dx, dy) || 1;
-                    const t = Math.max(0, 1 - dist / DOT_PROX);
-                    const tx = (dx / dist) * t * DOT_PUSH, ty = (dy / dist) * t * DOT_PUSH;
-                    d.ox += (tx - d.ox) * 0.15;
-                    d.oy += (ty - d.oy) * 0.15;
-                    if (Math.abs(tx - d.ox) > 0.05 || Math.abs(ty - d.oy) > 0.05) moving = true;
-                    dotCtx.fillStyle = t ? `rgba(91, 153, 252, ${0.35 + 0.65 * t})` : "rgba(255, 255, 255, 0.35)";
-                    dotCtx.beginPath();
-                    dotCtx.arc(d.x + d.ox, d.y + d.oy, DOT_R + t * 1.5, 0, Math.PI * 2);
-                    dotCtx.fill();
-                });
-                dotRaf = moving ? requestAnimationFrame(drawDots) : 0;
-            }
-
-            function buildDots() {
-                const w = introCard.offsetWidth, h = introCard.offsetHeight, dpr = window.devicePixelRatio || 1;
-                dotCanvas.width = w * dpr;
-                dotCanvas.height = h * dpr;
-                dotCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                dots = [];
-                for (let y = DOT_GAP / 2; y < h; y += DOT_GAP)
-                    for (let x = DOT_GAP / 2; x < w; x += DOT_GAP) dots.push({ x, y, ox: 0, oy: 0 });
-                drawDots();
-            }
-
-            introCard.addEventListener("mousemove", (e) => {
-                const rect = introCard.getBoundingClientRect();
-                dotMouse = { x: (e.clientX - rect.left) * introCard.offsetWidth / rect.width, y: (e.clientY - rect.top) * introCard.offsetHeight / rect.height };
-                if (!dotRaf) dotRaf = requestAnimationFrame(drawDots);
-            });
-            introCard.addEventListener("mouseleave", () => {
-                dotMouse = { x: -9999, y: -9999 };
-                if (!dotRaf) dotRaf = requestAnimationFrame(drawDots);
-            });
-            new ResizeObserver(buildDots).observe(introCard);
-
-            //메인1 - 자기소개 ScrollReveal
-            const introText = introCard.querySelector(".text .steps");
-            (function wrapWords(node) {
-                Array.from(node.childNodes).forEach((n) => {
-                    if (n.nodeType === 1) return wrapWords(n);
-                    if (n.nodeType !== 3) return;
-                    const frag = document.createDocumentFragment();
-                    n.textContent.split(/(\s+)/).forEach((part) => {
-                        if (!part) return;
-                        if (/^\s+$/.test(part)) return frag.append(part);
-                        const word = document.createElement("span");
-                        word.className = "word";
-                        word.textContent = part;
-                        frag.append(word);
-                    });
-                    n.replaceWith(frag);
-                });
-            })(introText);
-
-            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                gsap.fromTo(introText, { rotate: 3, transformOrigin: "0% 50%" }, {
-                    rotate: 0,
-                    ease: "none",
-                    scrollTrigger: { trigger: introText, start: "top bottom", end: "bottom bottom", scrub: true }
-                });
-                gsap.fromTo(introText.querySelectorAll(".word"), { opacity: 0.1, filter: "blur(4px)" }, {
-                    opacity: 1,
-                    filter: "blur(0px)",
-                    ease: "none",
-                    stagger: 0.05,
-                    scrollTrigger: { trigger: introText, start: "top bottom-=20%", end: "bottom bottom", scrub: true }
-                });
-            }
-
-
+            }());
 
             //메인1
 
@@ -311,7 +250,7 @@
             // 스킬
 
             // 스킬 - FolderFloat
-            const folders = document.querySelectorAll(".folder-float");
+            const folders = document.querySelectorAll(".skill_box .folder-float");
             const placeItems = (ff) => {
                 const list = ff.querySelector(".folder-float__items");
                 list.style.setProperty("--ff-shift", "0px");
@@ -347,7 +286,7 @@
 
             if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                 gsap.registerPlugin(SplitText);
-                document.querySelectorAll(".section-01 h2, .section-03 .con01 h2, .section-05 .project-title").forEach((title) => {
+                document.querySelectorAll(".section-01 h2, .section-03 .con01 h2, .section-05 .project-title, .work__head h2, .solo__title").forEach((title) => {
                     SplitText.create(title, {
                         type: "words, chars",
                         mask: "chars",
@@ -361,6 +300,16 @@
                         }),
                     });
                 });
+                gsap.utils.toArray(".work__item, .solo__item").forEach((el) => {
+                    gsap.from(el, {
+                        y: 80,
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        clearProps: "transform,opacity",
+                        scrollTrigger: { trigger: el, start: "top 90%", once: true },
+                    });
+                });
             }
 
             const lanyardBox = document.querySelector("#design .lanyard");
@@ -368,70 +317,9 @@
                 const lanyardIo = new IntersectionObserver(([entry]) => {
                     if (!entry.isIntersecting) return;
                     lanyardIo.disconnect();
-                    import("./js/lanyard.js").then((m) => m.mountLanyard(lanyardBox)).catch(() => {});
+                    import("./js/lanyard.js").then((m) => m.mountLanyard(lanyardBox)).catch(() => { });
                 }, { threshold: 0.25 });
                 lanyardIo.observe(lanyardBox);
-            }
-
-            const resumeSheet = document.querySelector(".section-02 #tech");
-            if (resumeSheet && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                resumeSheet.classList.add("is-folding");
-                ScrollTrigger.create({
-                    trigger: resumeSheet,
-                    start: "top 75%",
-                    end: "+=100000",
-                    once: true,
-                    onEnter: () => {
-                        const height = resumeSheet.offsetHeight;
-                        const part = Math.round(height / 3);
-                        const source = resumeSheet.cloneNode(true);
-                        source.classList.remove("is-folding");
-                        source.style.cssText = `position:absolute;left:0;top:0;width:${resumeSheet.offsetWidth}px;height:${height}px;margin:0;opacity:1;transform:none;`;
-                        const panel = (top, offset, size, withBack) => {
-                            const el = document.createElement("div");
-                            el.className = "fold__panel";
-                            el.style.top = `${top}px`;
-                            el.style.height = `${size}px`;
-                            const clip = document.createElement("div");
-                            clip.className = "fold__clip";
-                            const copy = source.cloneNode(true);
-                            copy.style.top = `${-offset}px`;
-                            const shade = document.createElement("div");
-                            shade.className = "fold__shade";
-                            clip.append(copy, shade);
-                            el.append(clip);
-                            if (withBack) {
-                                const back = document.createElement("div");
-                                back.className = "fold__back";
-                                el.append(back);
-                            }
-                            return el;
-                        };
-                        const fold = document.createElement("div");
-                        fold.className = "fold";
-                        fold.setAttribute("aria-hidden", "true");
-                        const top = panel(0, 0, part, false);
-                        const middle = panel(part, part, part, true);
-                        const bottom = panel(part, part * 2, height - part * 2, true);
-                        middle.append(bottom);
-                        fold.append(top, middle);
-                        resumeSheet.append(fold);
-                        gsap.set([middle, bottom], { transformOrigin: "50% 0%" });
-                        gsap.set(middle, { rotationX: -178 });
-                        gsap.set(bottom, { rotationX: 178 });
-                        gsap.set(fold.querySelectorAll(".fold__shade"), { opacity: 0.35 });
-                        gsap.timeline({
-                            onComplete: () => {
-                                fold.remove();
-                                resumeSheet.classList.remove("is-folding");
-                            },
-                        })
-                            .from(fold, { opacity: 0, y: 30, duration: 0.4, ease: "power2.out" })
-                            .to(middle, { rotationX: 0, duration: 0.9, ease: "power2.inOut" })
-                            .to(bottom, { rotationX: 0, duration: 0.9, ease: "power2.inOut" }, "-=0.45")
-                            .to(fold.querySelectorAll(".fold__shade"), { opacity: 0, duration: 0.6, stagger: 0.2 }, "-=1");
-                    },
-                });
             }
 
             //메인3
@@ -554,9 +442,230 @@
                 });
             }
 
+            document.querySelectorAll(".work__tabs").forEach(function (group) {
+                const tabs = [...group.querySelectorAll(".work__tab")];
+                const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+                const show = (k, focus) => {
+                    tabs.forEach((t, i) => {
+                        const on = i === k;
+                        t.classList.toggle("is-on", on);
+                        t.setAttribute("aria-selected", on);
+                        t.tabIndex = on ? 0 : -1;
+                        const p = document.getElementById(t.getAttribute("aria-controls"));
+                        p.hidden = !on;
+                        if (on && !reduce) gsap.fromTo(p, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", clearProps: "transform,opacity" });
+                    });
+                    if (focus) tabs[k].focus();
+                };
+                tabs.forEach((t, i) => {
+                    t.addEventListener("click", () => show(i));
+                    t.addEventListener("keydown", (e) => {
+                        if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+                        if (e.key === "ArrowLeft") { e.preventDefault(); show((i - 1 + tabs.length) % tabs.length, true); }
+                    });
+                });
+            });
+
+(function () {
+                const cover = document.querySelector("#section-01 .card-cover");
+                if (!cover) return;
+                let t = 0;
+                new ResizeObserver(() => {
+                    clearTimeout(t);
+                    t = setTimeout(() => ScrollTrigger.refresh(), 150);
+                }).observe(cover);
+            })();
+
+                        function initAboutStack() {
+                const cover = document.querySelector("#section-01 .card-cover");
+                const text = cover.querySelector(".text");
+                const cards = [text.querySelector(".intro-panel"), ...text.querySelectorAll(".section-02 .inner"), text.querySelector(".skill_box")];
+                const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+                const S = { spread: 0.5, depth: 0.5, tilt: reduce ? 0 : 25, threshold: 90, speed: 1, delay: 6000 };
+                const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+                const dur = (d) => (reduce ? 0.2 : d / S.speed);
+                const spot = (p) => ({ x: 0, y: 0, rotation: -p * S.spread * 8, scale: 1 - p * S.depth * 0.12 });
+                let order = cards.map((_, i) => i);
+                let drag = null, hovered = false, paused = false, timer = 0;
+                const busy = new Set();
+
+                const highlight = text.querySelector(".highlight");
+
+                const wrap = document.createElement("div");
+                wrap.className = "about-wrap";
+                const bar = document.createElement("div");
+                bar.className = "about-bar";
+                const count = document.createElement("span");
+                const toggle = document.createElement("button");
+                toggle.type = "button";
+                toggle.className = "about-toggle";
+                bar.append(count, toggle);
+                const stack = document.createElement("div");
+                stack.className = "about-stack";
+                stack.tabIndex = 0;
+                stack.setAttribute("role", "group");
+                stack.setAttribute("aria-label", "소개, 경력, 활동, 스킬 카드");
+                stack.append(text.querySelector(".intro-panel"), text.querySelector(".section-02"));
+                wrap.append(bar, stack);
+                cover.appendChild(wrap);
+                cover.appendChild(highlight);
+
+                const titles = ["About", null, null, null];
+                cards.forEach((el, i) => {
+                    el.classList.add("about-card");
+                    const no = document.createElement("span");
+                    no.className = "about-no";
+                    no.textContent = "0" + (i + 1) + ".";
+                    el.prepend(no);
+                    if (titles[i]) {
+                        const h = document.createElement("h3");
+                        h.className = "about-title";
+                        h.textContent = titles[i];
+                        no.after(h);
+                    }
+                });
+
+                const sync = () => {
+                    count.textContent = order[0] + 1 + "/" + cards.length;
+                    toggle.setAttribute("aria-label", paused ? "자동 넘김 재생" : "자동 넘김 일시정지");
+                    toggle.classList.toggle("is-paused", paused);
+                };
+
+                const place = (i, p, extra = {}) => {
+                    const el = cards[i];
+                    if (!extra.keepZ) el.style.zIndex = cards.length - p;
+                    gsap.to(el, { ...spot(p), rotationX: 0, rotationY: 0, "--shade": Math.min(0.6, p * S.depth * 0.14), duration: dur(0.6), ease: extra.ease || "power3.out", overwrite: "auto" });
+                };
+                const placeAll = (skip) => order.forEach((i, p) => { if (i !== skip && !busy.has(i)) place(i, p); });
+
+                const sendToBack = (dir = [1, -0.35], soft = true) => {
+                    if (order.length < 2) return;
+                    const top = order[0];
+                    if (busy.has(top)) return;
+                    order = [...order.slice(1), top];
+                    busy.add(top);
+                    const el = cards[top];
+                    let [dx, dy] = dir;
+                    const len = Math.hypot(dx, dy) || 1;
+                    dx /= len; dy /= len;
+                    const travel = soft ? el.offsetWidth * 0.32 : Math.min(el.offsetWidth / Math.max(Math.abs(dx), 0.01), el.offsetHeight / Math.max(Math.abs(dy), 0.01)) * 1.12 + 40;
+                    el.style.zIndex = cards.length + 1;
+                    gsap.to(el, {
+                        x: dx * travel, y: dy * travel, rotationX: 0, rotationY: 0, duration: dur(soft ? 0.3 : 0.45), ease: "power2.out", overwrite: "auto",
+                        onComplete: () => { busy.delete(top); place(top, order.indexOf(top)); }
+                    });
+                    placeAll(top);
+                    sync();
+                };
+
+                const schedule = () => {
+                    clearTimeout(timer);
+                    if (reduce || paused) return;
+                    timer = setTimeout(() => {
+                        if (!drag && !hovered) sendToBack();
+                        schedule();
+                    }, S.delay);
+                };
+
+                toggle.addEventListener("click", () => { paused = !paused; sync(); schedule(); });
+                stack.addEventListener("keydown", (e) => {
+                    if (e.target !== stack) return;
+                    if (["ArrowRight", "ArrowDown", "Enter", " "].includes(e.key)) { e.preventDefault(); sendToBack(); schedule(); }
+                });
+                stack.addEventListener("mouseenter", () => { hovered = true; });
+                stack.addEventListener("mouseleave", () => { hovered = false; });
+
+                const velocity = (samples, t) => {
+                    const r = samples.filter((s) => t - s[2] <= 100);
+                    if (r.length < 2) return [0, 0];
+                    const f = r[0], l = r[r.length - 1];
+                    const e = Math.max((l[2] - f[2]) / 1000, 0.008);
+                    return [(l[0] - f[0]) / e, (l[1] - f[1]) / e];
+                };
+
+                const onMove = (e) => {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+                    const el = cards[drag.i];
+                    if (!drag.moved) {
+                        if (Math.hypot(dx, dy) < 6) return;
+                        drag.moved = true;
+                        gsap.killTweensOf(el);
+                        drag.ox = gsap.getProperty(el, "x") - dx;
+                        drag.oy = gsap.getProperty(el, "y") - dy;
+                        el.classList.add("is-drag");
+                    }
+                    gsap.set(el, { x: drag.ox + dx, y: drag.oy + dy });
+                    drag.samples.push([e.clientX, e.clientY, e.timeStamp]);
+                    if (drag.samples.length > 12) drag.samples.shift();
+                    const [vx, vy] = velocity(drag.samples, e.timeStamp);
+                    gsap.to(el, {
+                        rotationY: clamp(vx / 1300, -1, 1) * S.tilt * 0.7 + clamp(dx / 260, -1, 1) * S.tilt * 0.3,
+                        rotationX: clamp(-vy / 1300, -1, 1) * S.tilt * 0.7 + clamp(-dy / 260, -1, 1) * S.tilt * 0.3,
+                        duration: 0.3, overwrite: "auto"
+                    });
+                };
+
+                const onUp = (e) => {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    const d = drag;
+                    drag = null;
+                    window.removeEventListener("pointermove", onMove);
+                    window.removeEventListener("pointerup", onUp);
+                    window.removeEventListener("pointercancel", onUp);
+                    const el = cards[d.i];
+                    el.classList.remove("is-drag");
+                    if (!d.moved) {
+                        if (e.type === "pointerup") { sendToBack(); schedule(); }
+                        return;
+                    }
+                    const dx = e.clientX - d.sx, dy = e.clientY - d.sy;
+                    const [vx, vy] = velocity(d.samples, e.timeStamp);
+                    const dist = Math.hypot(dx, dy), pace = Math.hypot(vx, vy);
+                    const flick = pace > 650 && dist > 16 && vx * dx + vy * dy > 0;
+                    if (e.type === "pointerup" && (dist > S.threshold || flick)) { sendToBack(pace > 300 ? [vx, vy] : [dx, dy], false); schedule(); }
+                    else place(d.i, 0, { ease: "back.out(1.4)" });
+                };
+
+                cards.forEach((el, i) => {
+                    const p = order.indexOf(i);
+                    gsap.set(el, { ...spot(p), transformOrigin: "10% 90%", transformPerspective: 800, "--shade": Math.min(0.6, p * S.depth * 0.14), zIndex: cards.length - p });
+                    el.addEventListener("pointerdown", (e) => {
+                        if (e.button !== 0 || drag || order[0] !== i || busy.has(i)) return;
+                        drag = { i, id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: 0, oy: 0, moved: false, samples: [[e.clientX, e.clientY, e.timeStamp]] };
+                        window.addEventListener("pointermove", onMove);
+                        window.addEventListener("pointerup", onUp);
+                        window.addEventListener("pointercancel", onUp);
+                    });
+                });
+                sync();
+                schedule();
+
+                const fillChars = reduce ? [] : SplitText.create(highlight, { type: "chars" }).chars;
+                if (fillChars.length) {
+                    gsap.set(fillChars, { color: "rgba(241,255,192,0.22)" });
+                    ScrollTrigger.matchMedia({
+                        "(min-width: 1101px)": () => {
+                            gsap.timeline({
+                                scrollTrigger: {
+                                    trigger: "#section-01", start: "top top", end: () => "+=" + innerHeight * 1.2,
+                                    pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 1
+                                }
+                            }).to(fillChars, { color: "#f1ffc0", ease: "none", stagger: 0.04 });
+                        },
+                        "(max-width: 1100px)": () => {
+                            gsap.to(fillChars, {
+                                color: "#f1ffc0", ease: "none", stagger: 0.04,
+                                scrollTrigger: { trigger: highlight, start: "top 85%", end: "top 40%", scrub: 0.6 }
+                            });
+                        }
+                    });
+                }
+            }
+
             // Run on load
-            if (document.readyState === "complete") initScroll();
-            else window.addEventListener("load", initScroll);
+            if (document.readyState === "complete") { initAboutStack(); initScroll(); }
+            else window.addEventListener("load", () => { initAboutStack(); initScroll(); });
 
 
             //탑버튼
@@ -673,6 +782,7 @@
 
 
 <body>
+
     <div id="wrap">
 
         <main class="main" id="main_visual">
@@ -694,7 +804,7 @@
                             <span>PROJECT</span>
                             <img src="img/nav3.png" />
                         </a>
-                        <a href="#section-05">
+                        <a href="#work">
                             <span>GRAPHIC DESIGN</span>
                             <img src="img/section-05.jpg" />
                         </a>
@@ -711,95 +821,20 @@
 
 
             <section class="main_visual">
-                <div class="textBox">
-                    <span class="mask">
-                        <span class="text">
-
-                            𓆇 ₊ 𓂃 ⊹Connecting<br />
-
-                            The<br />
-                            Dots<br />
-                            . ˚⁎ ◌ ｡ﾟ⊹ <br />
-                        </span><!-- .text end -->
-                    </span><!-- .mask end -->
-                </div><!-- .textBox end -->
-                <div class="inner">
-
-
-
-
-
-
-
-
-
-
-
-                    <div class="emo shad" data-x='10vw' data-y='50vh' data-rotate='-40' data-bound='40' data-z='50'>
-                        <img src="img/main_1.png" alt="덕배">
-                    </div>
-                    <div class="emo shad" data-x='20vw' data-y='70vh' data-rotate='-30' data-bound='50' data-z='40'>
-                        <img src="img/main_2.png" alt="어린소원">
-                    </div>
-                    <div class="emo shad" data-x='60vw' data-y='20vh' data-rotate='10' data-bound='30' data-z='20'>
-                        <img src="img/jeju.png" alt="제주소원" style="object-fit: cover; object-position: center 1rem;">
-                    </div>
-                    <div class="emo shad" data-x='70vw' data-y='70vh' data-rotate='10' data-bound='20'>
-                        <img src="img/main_3.png" alt="물놀이소원">
-                    </div>
-                    <div class="emo shad" data-x='30vw' data-y='20vh' data-rotate='-12' data-bound='30' data-z='30'>
-                        <img src="img/main_5.png" alt="키보드">
-                    </div>
-                    <div class="emo shad" data-x='75vw' data-y='50vh' data-rotate='20' data-bound='50'>
-                        <img src="img/main_6.png" alt="네잎클로버">
-                    </div>
-                    <div class="emo shad" data-x='10vw' data-y='10vh' data-rotate='-20' data-bound='50' data-z='60'>
-                        <img src="img/main_7.png" alt="고양이">
-                    </div>
-                    <div class="emo shad" data-x='30vw' data-y='60vh' data-rotate='-5' data-bound='10'>
-                        <img src="img/lotte.png" alt="야구소원" style="object-fit: contain; object-position: 0% top;">
-                    </div>
-                    <div class="emo shad" data-x='20vw' data-y='30vh' data-rotate='10' data-bound='70' data-z='90'>
-                        <img src="img/main_9.png" alt="연필">
-                    </div>
-                    <div class="emo shad" data-x='80vw' data-y='10vh' data-rotate='10' data-bound='70' data-z='90'>
-                        <img src="img/main_10.png" alt="버블">
-                    </div>
-                    <div class="emo shad" data-x='50vw' data-y='20vh' data-rotate='50' data-bound='70' data-z='90'>
-                        <img src="img/main_8.png" alt="야자수">
-                    </div>
-
-
-
-
-
-
-
-
-                    <div class="info-wrap">
-                        <div class="info-cont">
-                            <h1>Web</h1>
-                            <br>
-                            <h1>Portfolio</h1>
-                            <br>
-                            <br>
-                            <div class="shad">
-                                <a href="#section-04">Project</a>
-                            </div><!-- .shad end -->
-
-
-                        </div><!-- nfo-cont -->
-
-
-
-                    </div><!-- nfo-wrap -->
-
-                    <div class="btn">
-                        <a href="#section-02" class="btn-left">About me</a>
-                        <a href="#footer" class="btn-right">Contact</a>
-                    </div><!-- .btn end -->
-                </div><!-- .inner end -->
-
+                <div class="stage">
+                    <h1 class="textox" aria-label="Connecting The Dots">
+                        <svg viewBox="0 0 1400 240" aria-hidden="true">
+                            <text x="700" y="165" text-anchor="middle">Connecting The Dots</text>
+                        </svg>
+                        <span class="textox__sub">web Portfolio</span>
+                    </h1>
+                    <div class="confetti"></div>
+                    <nav class="menu3" aria-label="바로가기">
+                        <a class="menu3__btn" href="#section-01">About</a>
+                        <a class="menu3__btn menu3__btn--main" href="#work">Project</a>
+                        <a class="menu3__btn" href="#footer">Contact</a>
+                    </nav>
+                </div>
             </section><!-- main_visual end -->
 
 
@@ -808,53 +843,162 @@
 
 
 
-            <section class="section-01" id="section-01" data-aos="zoom-in" data-aos-delay="400">
+            <section class="section-01" id="section-01">
 
                 <div class="grain"></div>
 
 
                 <div class="card-cover">
-                    <canvas class="dot-grid" aria-hidden="true"></canvas>
 
                     <div class="text">
-                        <h2>Connecting the Dots:<br /> From Structure to Experience</h2>
-                        <ol class="steps">
-                            <li>
-                                <i class="mark mark--dot" aria-hidden="true"></i>
-                                <strong>점.</strong>
-                                <p>시행착오와 탐색의 흔적,<br />작은 점들이 쌓여 지금의 저를 만들었습니다.</p>
-                            </li>
-                            <li>
-                                <i class="mark mark--line" aria-hidden="true"></i>
-                                <strong>선.</strong>
-                                <p>그 점을 잇는 건 구조를 설계하는 일,<br />퍼블리싱은 그 연결의 과정입니다.</p>
-                            </li>
-                            <li>
-                                <i class="mark mark--screen" aria-hidden="true"></i>
-                                <strong>화면.</strong>
-                                <p>기술은 경험이 되고, 감성은 구조 속에서 완성됩니다.<br />모든 경험을 연결해 화면을 만드는 <span>웹 퍼블리셔 김소원</span>입니다.</p>
-                            </li>
-                        </ol>
-                        <span class="highlight">앞으로 저와의 여정을 함께해 주세요.</span>
-                        <em><img src="img/ArrowDown.png" alt="화살표밑"></em>
+                        <h2><span class="h2-line">Connecting the Dots:</span> <span class="h2-line">From Structure to Experience</span></h2>
+                        <div class="intro-panel">
+                            <p>‘점’ 하나하나가 모여 ‘선’을 이루고, 그 선이 이어져 하나의 ‘화면’이 됩니다.<br />퍼블리싱은 그 ‘연결의 과정’입니다.</p>
+                            <p>단순한 연결 속에서 기술은 경험이 되고, 감성은 구조 속에서 완성됩니다.<br />그리고 그 모든 흐름 안에는 저의 시간이 있습니다.<br />시행착오와 탐색의
+                                흔적 등, 작은 점이 쌓여 지금의 저를 만들었습니다.</p>
+                            <p>구조를 설계하고 감성을 구현하는 사람, 그 과정 속에서 쌓인 감각과 기술,<br />그것이 “지금의 나를 만든 선”이며, 저는 그 모든<br />경험을 연결해
+                                현재의 세상을 디자인하고 구현해 내는 <span>웹 퍼블리셔</span>입니다.</p>
+                            <span class="highlight">앞으로 저와의 여정을 함께해 주세요.</span>
+                            <em><img src="img/ArrowDown.png" alt="화살표밑"></em>
+                        </div>
+                        <!-- 메인2 -->
+                        <section class="section-02" id="section-02">
+                            <div class="inner">
+
+
+
+
+
+                                <div class="card" id="tech">
+                                    <div class="item">
+                                        <h2>Education</h2>
+                                        <ul class="depth-01">
+                                            <li class="jump"><span class="bold">2016</span> 부산예술대학교 실용음악과 졸업</li>
+                                            <li class="jump"><span class="bold">2014</span> 양산여자고등학교 졸업</li>
+                                        </ul><!-- Education end -->
+                                        <ul><!-- depth-01 end -->
+                                    </div><!-- .item end -->
+
+                                    <div class="item">
+                                        <h2>Experience</h2>
+                                        <ul class="depth-01">
+                                            <li><span class="bold">2026.03-2026.10</span> (주)비즈폼 웹디자인&퍼블리셔 근무</li>
+                                            <li><span class="bold">2016.04-2025.03</span> 서비스·유통 분야 근무 (신세계인터네셔널
+                                                SSG.COM, 쿠팡물류센터, 롯데백화점, 맥도날드, 쥬씨)</li>
+
+
+                                        </ul><!-- depth-01 end -->
+
+            
+                                    </div><!-- .item end -->
+
+
+
+
+
+                                </div><!-- card tech -->
+
+
+                            </div><!-- .inner -->
+
+                <div class="inner">
+                    <div class="card" id="tech2">
+                        <div class="item">
+                            <ul class="dpth-02">
+                                <h2>Activities</h2>
+                                <li class="mov"><span class="bold">2025</span> 그린컴퓨터아카데미 UI/UX 반응형 웹디자인 &
+                                                웹퍼블리셔 양성과정 수료
+                                            </li>
+                                <li class="mov"><span class="bold">2020.12</span> 부산영상위원회 부산아시아영화학교주최
+                                                2020맞춤형
+                                                영화영상전문인력 양성 온라인
+                                                영화음악심화과정 수료</li>
+                                <li class="mov"><span class="bold">2016.01</span> 부산 문화재단 주최 기본 음향기기의 세팅과 운영
+                                                실습과정 수료
+                                            </li>
+                                <li class="mov"><span class="bold">2015.06</span> 부경대학교주최 부경대학교 대학가요제 동상수상
+                                            </li>
+                            </ul><!-- depth-02 -->
+                        </div><!-- .item end -->
+                    </div><!-- card tech2 -->
+                </div><!-- .inner -->
+
+
+
+
+
+
+
+
+                            <!-- skill -->
+                            <div class="skill_box">
+                                <h2 class="skill-title">Skills</h2>
+                                <div class="skill-row">
+                                    <h3>Markup &amp; Styling</h3>
+                                    <ul>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2html5.svg" alt="HTML5"><span
+                                                class="skill-tip" role="tooltip"><b>HTML5</b><i>웹 접근성 마크업</i></span>
+                                        </li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/css3.png" alt="CSS"><span
+                                                class="skill-tip" role="tooltip"><b>CSS</b><i>반응형 웹</i></span></li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2scss.png" alt="SCSS"><span
+                                                class="skill-tip" role="tooltip"><b>SCSS</b></span></li>
+                                    </ul>
+                                </div>
+                                <div class="skill-row">
+                                    <h3>Interaction &amp; Motion</h3>
+                                    <ul>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2js.svg"
+                                                alt="JavaScript"><span class="skill-tip"
+                                                role="tooltip"><b>JavaScript</b><i>스크롤 인터랙션</i></span></li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2jquery.svg"
+                                                alt="jQuery"><span class="skill-tip"
+                                                role="tooltip"><b>jQuery</b><i>슬라이더</i></span></li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/gsap.svg" alt="GSAP"><span
+                                                class="skill-tip" role="tooltip"><b>GSAP</b></span></li>
+                                    </ul>
+                                </div>
+                                <div class="skill-row">
+                                    <h3>Design &amp; Graphics</h3>
+                                    <ul>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2figma.png" alt="Figma"><span
+                                                class="skill-tip" role="tooltip"><b>Figma</b><i>UI/UX 디자인</i></span>
+                                        </li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2ps.png" alt="Photoshop"><span
+                                                class="skill-tip" role="tooltip"><b>Photoshop</b><i>이미지 편집 ·
+                                                    상세페이지</i></span></li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2ai.png"
+                                                alt="Illustrator"><span class="skill-tip"
+                                                role="tooltip"><b>Illustrator</b><i>배너 디자인 · GIF 포스터</i></span></li>
+                                    </ul>
+                                </div>
+                                <div class="skill-row">
+                                    <h3>Workflow &amp; Tools</h3>
+                                    <ul>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2visual.png"
+                                                alt="VS Code"><span class="skill-tip" role="tooltip"><b>VS
+                                                    Code</b></span></li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2git.png" alt="GitHub"><span
+                                                class="skill-tip" role="tooltip"><b>GitHub</b></span></li>
+                                        <li class="skill-icon" tabindex="0"><img src="img/2notion.png"
+                                                alt="Notion"><span class="skill-tip" role="tooltip"><b>Notion</b></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div><!-- skill_box end -->
+
+
+                        </section><!-- section-02 -->
                     </div><!-- .text end -->
 
-                </div><!--card-cover end  -->
-            </section><!-- .section-01 end -->
 
-
-
-
-
-            <!-- 메인2 -->
-            <section class="section-02" id="section-02" data-aos="zoom-in-up" data-aos-delay="400">
-                <div class="inner">
                     <section class="card" id="design">
 
                         <div class="image">
                             <div class="lanyard">
                                 <img src="img/me.jpg" alt="증명사진">
                             </div>
+                            <p class="lanyard-hint">click here ↑</p>
                             <ul class="contact">
                                 <li class="group">
                                     <ul class="name">
@@ -874,150 +1018,27 @@
                                         <li>fthg0207@naver.com</li>
                                     </ul><!-- mail -->
                                 </li><!-- .group end -->
-                                <button><a href="img/김소원_입사지원서.pdf" target="_blank">이력서보기</a></button>
+                                <div class="folder-float resume-folder">
+                                    <div class="folder-float__folder">
+                                        <span class="folder-float__back" aria-hidden="true"></span>
+                                        <span class="resume-paper" aria-hidden="true"></span>
+                                        <span class="folder-float__front" aria-hidden="true"></span>
+                                        <a class="folder-float__trigger" href="img/김소원_입사지원서.pdf"
+                                            target="_blank">이력서보기</a>
+                                    </div>
+                                    <span class="folder-float__name" aria-hidden="true">이력서보기</span>
+                                </div>
                             </ul><!-- .contact end -->
                         </div><!--  image end -->
                     </section><!-- .card design -->
-
-
-
-
-                    <div class="card" id="tech">
-                        <div class="item">
-                            <h2>Education</h2>
-                            <ul class="depth-01">
-                                <li class="jump"><span class="bold">2016</span> 부산예술대학교 실용음악과 졸업</li>
-                                <li class="jump"><span class="bold">2014</span> 양산여자고등학교 졸업</li>
-                            </ul><!-- Education end -->
-                            <ul><!-- depth-01 end -->
-                        </div><!-- .item end -->
-
-                        <div class="item">
-                            <h2>Certifications</h2>
-                            <ul class="depth-01">
-                                <li class="jump"><span class="bold">2007</span> 워드프로세서 2급</li>
-                                <li class="jump"><span class="bold">2006</span> 워드프로세서 3급</li>
-                            </ul><!-- Education end -->
-                            <ul><!-- depth-01 end -->
-                        </div><!-- .item end -->
-
-                        <div class="item">
-                            <h2>Experience</h2>
-                            <ul class="depth-01">
-                                <li><span class="bold">2026.03-2026.10</span> (주)비즈폼 웹디자인&퍼블리셔 근무</li>
-                                <li><span class="bold">2021.03-2025.03</span> 신세계인터네셔널 SSG.COM 근무</li>
-                                <li><span class="bold">2020.11-2021.03</span> 쿠팡물류센터 근무</li>
-                                <li><span class="bold">2019.06-2020.05</span> 롯데백화점 MVG라운지 근무</li>
-                                <li><span class="bold">2017.11-2019.01</span> 맥도날드 근무</li>
-                                <li><span class="bold">2016.04-2017.11</span> 음료판매점 쥬씨 근무</li>
-
-
-                            </ul><!-- depth-01 end -->
-
-                            <ul class="dpth-02">
-                                <h2>Activities</h2>
-                                <li class="mov"><span class="bold">2025</span> 그린컴퓨터아카데미 UI/UX 반응형 웹디자인 & 웹퍼블리셔 양성과정 수료
-                                </li>
-                                <li class="mov"><span class="bold">2020.12</span> 부산영상위원회 부산아시아영화학교주최 2020맞춤형
-                                    영화영상전문인력 양성 온라인
-                                    영화음악심화과정 수료</li>
-                                <li class="mov"><span class="bold">2016.01</span> 부산 문화재단 주최 기본 음향기기의 세팅과 운영 실습과정 수료
-                                </li>
-                                <li class="mov"><span class="bold">2015.06</span> 부경대학교주최 부경대학교 대학가요제 동상수상</li>
-                            </ul><!-- depth-02 -->
-                        </div><!-- .item end -->
-
-
-
-
-
-                    </div><!-- card tech -->
-
-
-                </div><!-- .inner -->
+                </div><!--card-cover end  -->
+            </section><!-- .section-01 end -->
 
 
 
 
 
 
-
-
-                <!-- skill -->
-                <div class="skill_box">
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-markup" aria-label="Markup &amp; Styling 키워드">
-                                <li class="folder-float__item" style="--i:0">HTML5</li>
-                                <li class="folder-float__item" style="--i:1">CSS</li>
-                                <li class="folder-float__item" style="--i:2">SCSS</li>
-                                <li class="folder-float__item" style="--i:3">웹 접근성 마크업</li>
-                                <li class="folder-float__item" style="--i:4">반응형 웹</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <span class="folder-float__num">01</span>
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-markup" aria-expanded="false">Markup &amp; Styling</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Markup &amp; Styling</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-interaction" aria-label="Interaction &amp; Motion 키워드">
-                                <li class="folder-float__item" style="--i:0">JavaScript</li>
-                                <li class="folder-float__item" style="--i:1">jQuery</li>
-                                <li class="folder-float__item" style="--i:2">GSAP</li>
-                                <li class="folder-float__item" style="--i:3">슬라이더</li>
-                                <li class="folder-float__item" style="--i:4">스크롤 인터랙션</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <span class="folder-float__num">02</span>
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-interaction" aria-expanded="false">Interaction &amp; Motion</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Interaction &amp; Motion</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-design" aria-label="Design &amp; Graphics 키워드">
-                                <li class="folder-float__item" style="--i:0">UI/UX 디자인</li>
-                                <li class="folder-float__item" style="--i:1">배너 디자인</li>
-                                <li class="folder-float__item" style="--i:2">GIF 포스터</li>
-                                <li class="folder-float__item" style="--i:3">상세페이지</li>
-                                <li class="folder-float__item" style="--i:4">이미지 편집</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <span class="folder-float__num">03</span>
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-design" aria-expanded="false">Design &amp; Graphics</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Design &amp; Graphics</span>
-                    </div>
-                    <div class="folder-float">
-                        <div class="folder-float__folder">
-                            <span class="folder-float__back" aria-hidden="true"></span>
-                            <ul class="folder-float__items" id="skill-workflow" aria-label="Workflow &amp; Tools 키워드">
-                                <li class="folder-float__item" style="--i:0">VS Code</li>
-                                <li class="folder-float__item" style="--i:1">GitHub</li>
-                                <li class="folder-float__item" style="--i:2">Figma</li>
-                                <li class="folder-float__item" style="--i:3">Photoshop</li>
-                                <li class="folder-float__item" style="--i:4">Illustrator</li>
-                                <li class="folder-float__item" style="--i:5">Notion</li>
-                            </ul>
-                            <span class="folder-float__front" aria-hidden="true">
-                                <span class="folder-float__num">04</span>
-                            </span>
-                            <button type="button" class="folder-float__trigger" aria-controls="skill-workflow" aria-expanded="false">Workflow &amp; Tools</button>
-                        </div>
-                        <span class="folder-float__name" aria-hidden="true">Workflow &amp; Tools</span>
-                    </div>
-                </div><!-- skill_box end -->
-
-
-            </section><!-- section-02 -->
 
             <section class="section-03" id="section-03">
 
@@ -1046,493 +1067,470 @@
 
 
 
-            <!-- 메인4 -->
+            <section class="work" id="work">
+                <header class="work__head">
+                    <span class="work__no">01</span>
+                    <h2>실무<small>Work</small></h2>
+                    <p>[내용 추가 필요]</p>
+                </header>
+                <ol class="work__list">
+                    <li class="work__item">
+                        <div class="work__title">
+                            <span class="work__idx">01</span>
+                            <div class="work__row">
+                                <h3>정기메일</h3>
+                                <div class="work__tabs" role="tablist" aria-label="정기메일 작업 5개"><button type="button" class="work__tab is-on" role="tab" id="mail-tab-1" aria-controls="mail-panel-1" aria-selected="true" tabindex="0">01</button><button type="button" class="work__tab" role="tab" id="mail-tab-2" aria-controls="mail-panel-2" aria-selected="false" tabindex="-1">02</button><button type="button" class="work__tab" role="tab" id="mail-tab-3" aria-controls="mail-panel-3" aria-selected="false" tabindex="-1">03</button><button type="button" class="work__tab" role="tab" id="mail-tab-4" aria-controls="mail-panel-4" aria-selected="false" tabindex="-1">04</button><button type="button" class="work__tab" role="tab" id="mail-tab-5" aria-controls="mail-panel-5" aria-selected="false" tabindex="-1">05</button></div>
+                            </div>
+                        </div>
+                        <div class="work__body" id="mail-panel-1" role="tabpanel" aria-labelledby="mail-tab-1">
+                            <div class="work__media"><button type="button" class="work__zoom" data-full="img/탁상달력_상단.gif" aria-label="탁상달력_상단 원본 크기로 보기"><img src="img/탁상달력_상단.gif" alt="탁상달력_상단"></button></div>
+                            <p class="work__desc">2027 비즈폼 탁상달력_이벤트</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>우주 콘셉트 배경으로 신제품 탁상달력을 돋보이게 하고, 실제 구매 후기를 함께 노출해 신뢰도를 높임</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>디자인 · HTML 코딩</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>클릭률 7.33% · 평균 대비 1.5배 (선별작 중 1위)</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="mail-panel-2" role="tabpanel" aria-labelledby="mail-tab-2" hidden>
+                            <div class="work__media"><button type="button" class="work__zoom" data-full="img/종소세_상단.jpg" aria-label="종소세_상단 원본 크기로 보기"><img src="img/종소세_상단.jpg" alt="종소세_상단"></button></div>
+                            <p class="work__desc">종합소득세_스마트블록</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>체크리스트 형식으로 &quot;나도 해당되나?&quot;를 스스로 확인하게 해 참여를 유도</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>디자인 · HTML 코딩</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>클릭 4,345회 · 평균 대비 2.2배 (클릭수 1위)</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="mail-panel-3" role="tabpanel" aria-labelledby="mail-tab-3" hidden>
+                            <div class="work__media"><button type="button" class="work__zoom" data-full="img/계약서패키지_상단.jpg" aria-label="계약서패키지_상단 원본 크기로 보기"><img src="img/계약서패키지_상단.jpg" alt="계약서패키지_상단"></button></div>
+                            <p class="work__desc">계약서식패키지_핫클릭</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>실제 서식 화면을 미리보기로 보여줘 &quot;바로 쓸 수 있다&quot;는 느낌을 주고 클릭을 유도</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>디자인 · HTML 코딩</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>클릭률 7.11% · 평균 대비 +49%</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="mail-panel-4" role="tabpanel" aria-labelledby="mail-tab-4" hidden>
+                            <div class="work__media"><button type="button" class="work__zoom" data-full="img/9월의인사말_상단.gif" aria-label="9월의인사말_상단 원본 크기로 보기"><img src="img/9월의인사말_상단.gif" alt="9월의인사말_상단"></button></div>
+                            <p class="work__desc">9월의 인사말_핫클릭</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>억새 일러스트로 가을 계절감을 살려, 정보성 메일의 딱딱한 인상을 줄임</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>디자인 · HTML 코딩</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>클릭률 5.75% · 평균 대비 +21%</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="mail-panel-5" role="tabpanel" aria-labelledby="mail-tab-5" hidden>
+                            <div class="work__media"><button type="button" class="work__zoom" data-full="img/국민연금_상단.jpg" aria-label="국민연금_상단 원본 크기로 보기"><img src="img/국민연금_상단.jpg" alt="국민연금_상단"></button></div>
+                            <p class="work__desc">급여 정기업데이트(국민연금 개정)_핫클릭</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>딱딱한 법령 개정 안내를 업데이트 콘셉트의 밝은 그래픽으로 풀어, 친근하게 전달</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>디자인 · HTML 코딩</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>클릭률 5.49% · 평균 대비 +15%</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </li>
+                    <li class="work__item">
+                        <div class="work__title">
+                            <span class="work__idx">02</span>
+                            <div class="work__row">
+                                <h3>핫클릭 상세페이지</h3>
+                                <div class="work__tabs" role="tablist" aria-label="핫클릭 상세페이지 작업 5개"><button type="button" class="work__tab is-on" role="tab" id="detail-tab-1" aria-controls="detail-panel-1" aria-selected="true" tabindex="0">01</button><button type="button" class="work__tab" role="tab" id="detail-tab-2" aria-controls="detail-panel-2" aria-selected="false" tabindex="-1">02</button><button type="button" class="work__tab" role="tab" id="detail-tab-3" aria-controls="detail-panel-3" aria-selected="false" tabindex="-1">03</button><button type="button" class="work__tab" role="tab" id="detail-tab-4" aria-controls="detail-panel-4" aria-selected="false" tabindex="-1">04</button><button type="button" class="work__tab" role="tab" id="detail-tab-5" aria-controls="detail-panel-5" aria-selected="false" tabindex="-1">05</button></div>
+                            </div>
+                        </div>
+                        <div class="work__body" id="detail-panel-1" role="tabpanel" aria-labelledby="detail-tab-1">
+                            <div class="work__media"><a class="work__zoom" href="img/AI%E1%84%89%E1%85%A5%E1%84%89%E1%85%B5%E1%86%A8%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5_PC%201.jpg" target="_blank" rel="noopener" aria-label="AI서식패키지 새 창에서 보기"><img src="img/AI%E1%84%89%E1%85%A5%E1%84%89%E1%85%B5%E1%86%A8%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5_PC%201.jpg" alt="AI서식패키지"></a></div>
+                            <p class="work__desc">AI서식패키지</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="detail-panel-2" role="tabpanel" aria-labelledby="detail-tab-2" hidden>
+                            <div class="work__media"><a class="work__zoom" href="img/%E1%84%80%E1%85%A7%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%89%E1%85%A5%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%28%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%83%E1%85%A1%E1%86%AF%29_PC%201.jpg" target="_blank" rel="noopener" aria-label="견적서패키지 새 창에서 보기"><img src="img/%E1%84%80%E1%85%A7%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%89%E1%85%A5%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%28%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%83%E1%85%A1%E1%86%AF%29_PC%201.jpg" alt="견적서패키지"></a></div>
+                            <p class="work__desc">견적서패키지</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="detail-panel-3" role="tabpanel" aria-labelledby="detail-tab-3" hidden>
+                            <div class="work__media"><a class="work__zoom" href="img/%E1%84%8B%E1%85%B5%E1%86%B7%E1%84%83%E1%85%A2%E1%84%8E%E1%85%A1%E1%84%80%E1%85%A8%E1%84%8B%E1%85%A3%E1%86%A8%E1%84%89%E1%85%A5%E1%84%92%E1%85%A1%E1%86%BA%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%B5%E1%86%A8_PC%201.jpg" target="_blank" rel="noopener" aria-label="임대차계약서핫클릭 새 창에서 보기"><img src="img/%E1%84%8B%E1%85%B5%E1%86%B7%E1%84%83%E1%85%A2%E1%84%8E%E1%85%A1%E1%84%80%E1%85%A8%E1%84%8B%E1%85%A3%E1%86%A8%E1%84%89%E1%85%A5%E1%84%92%E1%85%A1%E1%86%BA%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%B5%E1%86%A8_PC%201.jpg" alt="임대차계약서핫클릭"></a></div>
+                            <p class="work__desc">임대차계약서핫클릭</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="detail-panel-4" role="tabpanel" aria-labelledby="detail-tab-4" hidden>
+                            <div class="work__media"><a class="work__zoom" href="img/%E1%84%8B%E1%85%A7%E1%84%85%E1%85%B3%E1%86%B7%E1%84%92%E1%85%B2%E1%84%80%E1%85%A1%E1%84%92%E1%85%A1%E1%86%BA%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%B5%E1%86%A8_PC%201.jpg" target="_blank" rel="noopener" aria-label="여름휴가핫클릭 새 창에서 보기"><img src="img/%E1%84%8B%E1%85%A7%E1%84%85%E1%85%B3%E1%86%B7%E1%84%92%E1%85%B2%E1%84%80%E1%85%A1%E1%84%92%E1%85%A1%E1%86%BA%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%B5%E1%86%A8_PC%201.jpg" alt="여름휴가핫클릭"></a></div>
+                            <p class="work__desc">여름휴가핫클릭</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="work__body" id="detail-panel-5" role="tabpanel" aria-labelledby="detail-tab-5" hidden>
+                            <div class="work__media"><a class="work__zoom" href="img/%E1%84%89%E1%85%A5%E1%84%89%E1%85%B5%E1%86%A8%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5_%E1%84%80%E1%85%B3%E1%86%AB%E1%84%90%E1%85%A2_PC%201.jpg" target="_blank" rel="noopener" aria-label="근태서식패키지 새 창에서 보기"><img src="img/%E1%84%89%E1%85%A5%E1%84%89%E1%85%B5%E1%86%A8%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5_%E1%84%80%E1%85%B3%E1%86%AB%E1%84%90%E1%85%A2_PC%201.jpg" alt="근태서식패키지"></a></div>
+                            <p class="work__desc">근태서식패키지</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기획 포인트</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>역할</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>성과</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </li>
+                    <li class="work__item">
+                        <div class="work__title">
+                            <span class="work__idx">03</span>
+                            <h3>배너</h3>
+                        </div>
+                        <div class="work__body">
+                            <div class="work__media">[이미지 추가 필요]</div>
+                            <p class="work__desc">[내용 추가 필요]</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기간</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>사용 툴</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </li>
+                    <li class="work__item">
+                        <div class="work__title">
+                            <span class="work__idx">04</span>
+                            <h3>인사말</h3>
+                        </div>
+                        <div class="work__body">
+                            <div class="work__media">[이미지 추가 필요]</div>
+                            <p class="work__desc">[내용 추가 필요]</p>
+                            <dl class="work__meta">
+                                <div>
+                                    <dt>기간</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                                <div>
+                                    <dt>사용 툴</dt>
+                                    <dd>[내용 추가 필요]</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </li>
+                </ol>
+            </section><!-- work end -->
 
-            <section class="section-04" id="section-04">
-
-                <div class="div-inner-1">
-                    <section class="section-1">
-                        <div class="text">
-                            <div class="box">
-                                <div class="title">
-                                    <h2>유한킴벌리</h2>
-                                    <ul class="color">
-                                        <li class="col">반응형 웹 리뉴얼 프로젝트</li>
-                                        <li>메인페이지</li>
-                                        <li>서브페이지</li>
-                                    </ul>
-
-                                </div><!-- .title end -->
-
-
-                                <p>대한민국 생활용품기업 <em>유한킴벌리의 웹사이트 반응형 리뉴얼 프로젝트</em>입니다.
-                                    기존 풀페이지 방식의 웹사이트를 gsap와 JavaScript/jQuery등의 라이브러리를 활용해 현시대의 트렌디한 방식에 어울리고
-                                    사용자의 불편한부분을 개선하여 리뉴얼했으며 현재 반응형개선중입니다.<br />
-
+            <section class="solo" id="mywork">
+                <h2 class="solo__title">개인프로젝트<small>Personal Project</small></h2>
+                <div class="solo__list">
+                    <article class="solo__item">
+                        <span class="solo__idx">01</span>
+                        <div class="solo__main">
+                            <div class="solo__head">
+                                <h3 class="solo__name">유한킴벌리</h3><span class="solo__sub">반응형 웹 리뉴얼 프로젝트 · 메인페이지 ·
+                                    서브페이지</span>
+                            </div>
+                            <div class="solo__text">
+                                <p><em>유한킴벌리 웹사이트 반응형 리뉴얼</em>입니다.<br />
+                                    기존 풀페이지 방식에서 사용자가 불편했던 부분을 개선하고, GSAP과 JavaScript/jQuery로 인터랙션을 구현했습니다.<br />
+                                    현재 반응형 대응을 진행하고 있습니다.
                                 </p>
-                            </div><!-- .box end -->
-
-
-
-
-
-                            <ul class="list">
-                                <li>#Photoshop</li>
-                                <li>#Figma</li>
-                                <li>#illustrator</li>
-                                <li>#HTML5</li>
-                                <li>#CSS/SCSS</li>
-                                <li>#JavaScript</li>
-                                <li>#jQuery</li>
-                                <li>#GSAP</li>
-                                <li>#AOS</li>
-                                <li>#SwiperSlide</li>
-                            </ul><!-- list end -->
-
-
-                            <span>기획/디자인/퍼블리싱 100%</span>
-
-                            <em>📌 Click here </em>
-                            <ul class="btn">
-                                <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/" target="_blank"><span>Web
-                                            site💻</span></a></li>
-                                <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/sub/sub.html"
-                                        target="_blank"><span>Sub Page⌨</span></a></li>
-                                <li><a href="https://github.com/i-wisheeee/yuhan-kimberly" target="_blank"><span>Git hub
-                                            <img src="img/2git.png" alt="git"></span></a></li>
-                                <li><a href="img/유한킴벌리.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                <li><a href="https://www.figma.com/design/BVrhCnkFtuAffNXHtA9JRQ/%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC?node-id=0-1&p=f&t=QGHNxUohIa4x0EUh-0"
-                                        target="_blank"><span>Figma <img src="img/2figma.png" alt="figma"></span></a>
-                                </li>
-                                <li><a href="img/yuhanpd.pdf" target="_blank"><span>Notion <img src="img/2notion.png"
-                                                alt="notion"></span></a></li>
-                            </ul><!-- btn end -->
-
-                        </div><!-- .text end -->
-
-                        <div class="mockup">
-                            <p>💬이미지위에 마우스를 갖다대면 사진이 스크롤됩니다.🖱</p>
-                            <div class="wrap">
-
-                                <div class="image">
-
-                                    <img src="img/yuhan.png" alt="유한킴벌리">
-
-                                </div><!-- .image end -->
-
-                            </div><!-- wrap end -->
-
-                        </div><!-- .mockup end -->
-
-                    </section><!-- section-1 end -->
-                </div><!-- div-inner-1 end -->
-
-
-
-
-                <div class="div-inner-2">
-                    <section class="section-2">
-                        <div class="text">
-                            <div class="box">
-                                <div class="title">
-                                    <h2>고롱고롱</h2>
-                                    <ul class="color">
-                                        <li class="col">반응형 웹 리뉴얼 프로젝트</li>
-                                        <li>메인페이지</li>
-
-                                    </ul>
-
-                                </div><!-- .title end -->
-
-
-                                <p>고양이용품(집, 방석, 쿠션 등)을 디자인 및 판매하는 자사 민간온라인 쇼핑몰 브랜드 <em>고롱고롱 웹사이트 반응형 리뉴얼
-                                        프로젝트</em>입니다.<br />
-                                    기존의 정리되지않아 불편했던 사이트의 구성을 사용자가 접근하기 편리하게 리뉴얼하고
-                                    브랜드가 가진 이미지를 보완하기위해 gsap와 JavaScript/jQuery등의 라이브러리를 활용해
-                                    꾸밈요소를 추가하여 '고롱고롱'이라는 이미지를 극대화시켰습니다.
-
-
+                                <ul class="list">
+                                    <li>#Photoshop</li>
+                                    <li>#Figma</li>
+                                    <li>#illustrator</li>
+                                    <li>#HTML5</li>
+                                    <li>#CSS/SCSS</li>
+                                    <li>#JavaScript</li>
+                                    <li>#jQuery</li>
+                                    <li>#GSAP</li>
+                                    <li>#AOS</li>
+                                    <li>#SwiperSlide</li>
+                                </ul>
+                                <span class="solo__role">기획/디자인/퍼블리싱 100%</span>
+                                <ul class="btn">
+                                    <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/" target="_blank"><span>Web
+                                                site💻</span></a></li>
+                                    <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/sub/sub.html"
+                                            target="_blank"><span>Sub Page⌨</span></a></li>
+                                    <li><a href="https://github.com/i-wisheeee/yuhan-kimberly" target="_blank"><span>Git
+                                                hub
+                                                <img src="img/2git.png" alt="git"></span></a></li>
+                                    <li><a href="img/유한킴벌리.pdf" target="_blank"><span>Process 📁</span></a></li>
+                                    <li><a href="https://www.figma.com/design/BVrhCnkFtuAffNXHtA9JRQ/%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC?node-id=0-1&p=f&t=QGHNxUohIa4x0EUh-0"
+                                            target="_blank"><span>Figma <img src="img/2figma.png"
+                                                    alt="figma"></span></a>
+                                    </li>
+                                    <li><a href="img/yuhanpd.pdf" target="_blank"><span>Notion <img
+                                                    src="img/2notion.png" alt="notion"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="solo__shot">
+                            <div class="solo__win solo__win--tall"><img src="img/yuhan.png" alt="유한킴벌리"></div>
+                        </div>
+                    </article>
+                    <article class="solo__item">
+                        <span class="solo__idx">02</span>
+                        <div class="solo__main">
+                            <div class="solo__head">
+                                <h3 class="solo__name">고롱고롱</h3><span class="solo__sub">반응형 웹 리뉴얼 프로젝트 · 메인페이지</span>
+                            </div>
+                            <div class="solo__text">
+                                <p>고양이용품 쇼핑몰 <em>고롱고롱 웹사이트 반응형 리뉴얼</em>입니다.<br />
+                                    정리되지 않아 찾기 불편했던 구성을 사용자가 접근하기 쉽게 다시 짰습니다.<br />
+                                    GSAP과 JavaScript/jQuery로 꾸밈 요소를 더해 '고롱고롱'의 브랜드 이미지를 살렸습니다.
                                 </p>
-                            </div><!-- .box end -->
+                                <ul class="list">
+                                    <li>#Figma</li>
+                                    <li>#Photoshop</li>
+                                    <li>#HTML5</li>
+                                    <li>#CSS</li>
+                                    <li>#JavaScript</li>
+                                    <li>#jQuery</li>
+                                    <li>#GSAP</li>
+                                    <li>#AOS</li>
+                                    <li>#SwiperSlide</li>
+                                </ul>
+                                <span class="solo__role">기획/디자인/퍼블리싱 100%</span>
+                                <ul class="btn">
+                                    <li><a href="https://i-wisheeee.github.io/gorong_gorong/" target="_blank"><span>Web
+                                                site💻</span></a></li>
 
-
-
-
-
-                            <ul class="list">
-                                <li>#Figma</li>
-                                <li>Photoshop</li>
-                                <li>#HTML5</li>
-                                <li>#CSS</li>
-                                <li>#JavaScript</li>
-                                <li>#jQuery</li>
-                                <li>#GSAP</li>
-                                <li>#AOS</li>
-                                <li>#SwiperSlide</li>
-                            </ul><!-- list end -->
-
-
-                            <span>기획/디자인/퍼블리싱 100%</span>
-
-                            <em>📌 Click here </em>
-                            <ul class="btn">
-                                <li><a href="https://i-wisheeee.github.io/gorong_gorong/" target="_blank"><span>Web
-                                            site💻</span></a></li>
-
-                                <li><a href="https://github.com/i-wisheeee/gorong_gorong" target="_blank"><span>Git hub
-                                            <img src="img/2git.png" alt="git"></span></a></li>
-                                <li><a href="img/고롱고롱.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                <li><a href="https://www.figma.com/design/frR8VIeRT4S0F61k9OeKbK/%EA%B3%A0%EB%A1%B1%EA%B3%A0%EB%A1%B1%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%B0%98%EC%9D%91%ED%98%95%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=vDOGnljjCbKV9pL0-0"
-                                        target="_blank"><span>Figma <img src="img/2figma.png" alt="figma"></span></a>
-                                </li>
-                                <li><a href="img/gorong_n-tion.pdf" target="_blank"><span>Notion <img
-                                                src="img/2notion.png" alt="notion"></span></a></li>
-                                <li><a href="https://goronggorong.co.kr/" target="_blank"><span>gorong😺<img
-                                                src="img/2notion.png" alt="notion"></span></a></li>
-                            </ul><!-- btn end -->
-
-                        </div><!-- .text end -->
-
-                        <div class="mockup">
-                            <p>💬이미지위에 마우스를 갖다대면 사진이 스크롤됩니다.🖱</p>
-
-                            <div class="wrap">
-
-                                <div class="image">
-
-                                    <img src="img/go-pc.png" alt="고롱고롱pc" class="pc">
-
-
-                                </div><!-- .image end -->
-
-
-                            </div><!-- wrap end -->
-
-                            <div class="wrap2">
-                                <div class="image">
-
-                                    <img src="img/gorongtab.png" alt="고롱고롱ta" class="ta">
-
-
-                                </div><!-- .image end -->
-                            </div><!-- wrap2 end -->
-
-
-                        </div><!-- .mockup end -->
-
-                    </section><!-- section-2 end -->
-                </div><!-- div-inner-2 end -->
-
-                <div class="div-inner-3">
-                    <section class="section-3">
-                        <div class="text">
-                            <div class="box">
-                                <div class="title">
-                                    <h2>한국음악<br />저작권협회</h2>
-
-
-                                    <ul class="color">
-                                        <li class="col">웹 리뉴얼 프로젝트</li>
-                                        <li>메인페이지</li>
-
-                                    </ul>
-
-                                </div><!-- .title end -->
-
-
-                                <p>대한민국 문화체육관광부 소관의 사단법인협회인 <em>한국음악저작권협회 리뉴얼프로젝트</em>입니다.<br />
-                                    기존의 관리가 부족했던 웹사이트를 JavaScript/jQuery등의 라이브러리를 활용해 풀페이지로 현시대의 트렌디한 방식에 어울리도록 개선하였으며,
-                                    툴팁과 로고 등을 직접 리디자인하였습니다.
-
-
+                                    <li><a href="https://github.com/i-wisheeee/gorong_gorong" target="_blank"><span>Git
+                                                hub
+                                                <img src="img/2git.png" alt="git"></span></a></li>
+                                    <li><a href="img/고롱고롱.pdf" target="_blank"><span>Process 📁</span></a></li>
+                                    <li><a href="https://www.figma.com/design/frR8VIeRT4S0F61k9OeKbK/%EA%B3%A0%EB%A1%B1%EA%B3%A0%EB%A1%B1%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%B0%98%EC%9D%91%ED%98%95%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=vDOGnljjCbKV9pL0-0"
+                                            target="_blank"><span>Figma <img src="img/2figma.png"
+                                                    alt="figma"></span></a>
+                                    </li>
+                                    <li><a href="img/gorong_n-tion.pdf" target="_blank"><span>Notion <img
+                                                    src="img/2notion.png" alt="notion"></span></a></li>
+                                    <li><a href="https://goronggorong.co.kr/" target="_blank"><span>gorong😺<img
+                                                    src="img/2notion.png" alt="notion"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="solo__shot">
+                            <div class="solo__win solo__win--tall"><img src="img/go-pc.png" alt="고롱고롱pc"></div>
+                            <div class="solo__win solo__win--tab"><img src="img/gorongtab.png" alt="고롱고롱ta"></div>
+                        </div>
+                    </article>
+                    <article class="solo__item">
+                        <span class="solo__idx">03</span>
+                        <div class="solo__main">
+                            <div class="solo__head">
+                                <h3 class="solo__name">한국음악저작권협회</h3><span class="solo__sub">웹 리뉴얼 프로젝트 · 메인페이지</span>
+                            </div>
+                            <div class="solo__text">
+                                <p><em>한국음악저작권협회 웹사이트 리뉴얼</em>입니다.<br />
+                                    관리가 부족했던 기존 사이트를 JavaScript/jQuery 풀페이지 구조로 개선했습니다.<br />
+                                    툴팁과 로고는 직접 리디자인했습니다.
                                 </p>
-                            </div><!-- .box end -->
+                                <ul class="list">
+                                    <li>#Figma</li>
+                                    <li>#photoshop</li>
+                                    <li>#HTML5</li>
+                                    <li>#illustrator</li>
+                                    <li>#CSS</li>
+                                    <li>#JavaScript</li>
+                                    <li>#jQuery</li>
+                                    <li>#Fullpage</li>
+                                </ul>
+                                <span class="solo__role">기획/디자인/퍼블리싱 100%</span>
+                                <ul class="btn">
+                                    <li><a href="https://i-wisheeee.github.io/KOMKA/" target="_blank"><span>Web
+                                                site💻</span></a></li>
 
-
-
-
-
-                            <ul class="list">
-                                <li>#Figma</li>
-                                <li>#photoshop</li>
-                                <li>#HTML5</li>
-                                <li>#illustrator</li>
-                                <li>#CSS</li>
-                                <li>#JavaScript</li>
-                                <li>#jQuery</li>
-                                <li>Fullpage</li>
-                            </ul><!-- list end -->
-
-
-                            <span>기획/디자인/퍼블리싱 100%</span>
-
-                            <em>📌 Click here </em>
-                            <ul class="btn">
-                                <li><a href="https://i-wisheeee.github.io/KOMKA/" target="_blank"><span>Web
-                                            site💻</span></a></li>
-
-                                <li><a href="https://github.com/i-wisheeee/KOMKA" target="_blank"><span>Git hub <img
-                                                src="img/2git.png" alt="git"></span></a></li>
-                                <li><a href="img/한국음악저작권협회.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                <li><a href="https://www.figma.com/design/Mmf0t2A61Xc7DgaLNesH0l/%ED%95%9C%EA%B5%AD%EC%9D%8C%EC%95%85%EC%A0%80%EC%9E%91%EA%B6%8C%ED%98%91%ED%9A%8C%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=69dfCEr738mQMcG3-0"
-                                        target="_blank"><span>Figma <img src="img/2figma.png" alt="figma"></span></a>
-                                </li>
-                                <li><a href="img/komka_notion.pdf" target="_blank"><span>Notion <img
-                                                src="img/2notion.png" alt="notion"></span></a></li>
-                            </ul><!-- btn end -->
-
-                        </div><!-- .text end -->
-
-                        <div class="mockup">
-                            <p>💬이미지위에 마우스를 갖다대면 사진이 스크롤됩니다.🖱</p>
-                            <div class="wrap">
-
-                                <div class="image">
-
-                                    <img src="img/komka.png" alt="한국음악저작권">
-
-                                </div><!-- .image end -->
-
-                            </div><!-- wrap end -->
-
-                        </div><!-- .mockup end -->
-
-                    </section><!-- section-3 end -->
-                </div><!-- div-inner-3 end -->
-
-                <div class="div-inner-4">
-                    <section class="section-4">
-                        <div class="text">
-                            <div class="box">
-                                <div class="title">
-                                    <h2>코레일톡</h2>
-
-                                    <div class="color">
-                                        <p>앱 리디자인 프로젝트</p>
-                                        <ul><!-- 005BAC -->
-
-                                            <li>스플래쉬</li>
-                                            <li>로그인</li>
-                                            <li>온보딩</li>
-                                            <li>메인페이지</li>
-                                            <li>서브페이지</li>
-                                            <li>메뉴</li>
-                                        </ul>
-                                    </div><!-- .color end -->
-                                </div><!-- .title end -->
-
-
-                                <p>철도 여객운송 및 화물운송 사업을 수행하는 국토교통부 산하 준시장형 공기업 <em>코레일의 승차권예매 어플 리디자인 프로젝트</em>입니다.<br />
-                                    기존 공기업 이미지의 다소 경직되고 구식적인 느낌을 개선하고, 보다 친근하게 다가갈수있도록 디자인에 초점을 두었으며,
-                                    사용자 경험의 불편 요소를 최소화하고, 예매 과정을 보다 직관적이고 신속하게 진행할 수 있도록 개선하였습니다.
+                                    <li><a href="https://github.com/i-wisheeee/KOMKA" target="_blank"><span>Git hub <img
+                                                    src="img/2git.png" alt="git"></span></a></li>
+                                    <li><a href="img/한국음악저작권협회.pdf" target="_blank"><span>Process 📁</span></a></li>
+                                    <li><a href="https://www.figma.com/design/Mmf0t2A61Xc7DgaLNesH0l/%ED%95%9C%EA%B5%AD%EC%9D%8C%EC%95%85%EC%A0%80%EC%9E%91%EA%B6%8C%ED%98%91%ED%9A%8C%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=69dfCEr738mQMcG3-0"
+                                            target="_blank"><span>Figma <img src="img/2figma.png"
+                                                    alt="figma"></span></a>
+                                    </li>
+                                    <li><a href="img/komka_notion.pdf" target="_blank"><span>Notion <img
+                                                    src="img/2notion.png" alt="notion"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="solo__shot">
+                            <div class="solo__win solo__win--tall"><img src="img/komka.png" alt="한국음악저작권"></div>
+                        </div>
+                    </article>
+                    <article class="solo__item">
+                        <span class="solo__idx">04</span>
+                        <div class="solo__main">
+                            <div class="solo__head">
+                                <h3 class="solo__name">코레일톡</h3><span class="solo__sub">앱 리디자인 프로젝트 · 스플래쉬 · 로그인 · 온보딩 ·
+                                    메인페이지 · 서브페이지 · 메뉴</span>
+                            </div>
+                            <div class="solo__text">
+                                <p><em>코레일톡 승차권 예매 앱 리디자인</em>입니다.<br />
+                                    경직되고 구식이던 공기업 앱의 인상을 친근하게 바꾸는 데 초점을 두었습니다.<br />
+                                    사용자 경험의 불편 요소를 줄여 예매 과정이 더 직관적이고 빠르게 진행되도록 개선했습니다.
                                 </p>
-                            </div><!-- .box end -->
+                                <ul class="list">
+                                    <li>#Figma</li>
+
+                                    <li>#HTML5</li>
+                                    <li>#CSS</li>
+                                    <li>#JavaScript</li>
 
 
+                                    <li>#SwiperSlide</li>
+                                </ul>
+                                <span class="solo__role">기획/디자인/퍼블리싱/프로토타입 100%</span>
+                                <ul class="btn">
+                                    <li><a href="https://www.figma.com/proto/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?t=RClOR4NSQlxN3pVp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&node-id=266-2552&starting-point-node-id=257%3A2535"
+                                            target="_blank"><span>
+                                                prototype💻
+                                            </span></a></li>
 
-
-
-                            <ul class="list">
-                                <li>#Figma</li>
-
-                                <li>#HTML5</li>
-                                <li>#CSS</li>
-                                <li>#JavaScript</li>
-
-
-                                <li>#SwiperSlide</li>
-                            </ul><!-- list end -->
-
-
-                            <span>기획/디자인/퍼블리싱/프로토타입 100%</span>
-
-                            <em>📌 Click here </em>
-                            <ul class="btn">
-                                <li><a href="https://www.figma.com/proto/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?t=RClOR4NSQlxN3pVp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&node-id=266-2552&starting-point-node-id=257%3A2535"
-                                        target="_blank"><span>
-                                            prototype💻
-                                        </span></a></li>
-
-                                <li><a href="https://i-wisheeee.github.io/KorailTalk/" target="_blank"><span>Git hub
-                                            <img src="img/2git.png" alt="git"></span></a></li>
-                                <li><a href="img/코레일.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                <li><a href="https://www.figma.com/design/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?node-id=0-1&p=f&t=356CBRYXXBNvfesf-0"
-                                        target="_blank"><span>Figma <img src="img/2figma.png" alt="figma"></span></a>
-                                </li>
-                                <li><a href="img/ktx_notion.pdf" target="_blank"><span>Notion <img src="img/2notion.png"
-                                                alt="notion"></span></a></li>
-                            </ul><!-- btn end -->
-
-                        </div><!-- .text end -->
-
-
-
-
-
-                        <div class="image">
-
-                            <img src="img/korail.png" alt="코레일톡">
-
-                            <div class="qr">
-                                <img src="img/korail_qr.png" alt="qr">
-                            </div><!-- qr -->
-
-                        </div><!-- .image end -->
-
-
-
-
-
-                    </section><!-- section-4 end -->
-                </div><!-- div-inner-4 end -->
-
-
-                <div class="div-inner-5">
-                    <section class="section-5">
-                        <div class="text">
-                            <div class="box">
-                                <div class="title">
-                                    <h2>스타벅스</h2>
-
-                                    <div class="color">
-                                        <p>앱 리디자인 프로젝트</p>
-                                        <ul><!-- 005BAC -->
-
-                                            <li>메인페이지</li>
-                                            <li>서브페이지</li>
-
-                                        </ul>
-                                    </div><!-- .color end -->
-                                </div><!-- .title end -->
-
-
-                                <p>세계적인 커피기업 <em>스타벅스의 모바일 어플 리디자인 프로젝트</em>입니다.<br />
-                                    기존 어플의 사용자 조사를 통해 개선점을 파악하여 사용자의 관점에서 편리함을 목적으로 하되
-                                    기존 브랜드의 세련된이미지를 지키는데에 초점을 두며 리디자인을 진행하였습니다.
-
+                                    <li><a href="https://i-wisheeee.github.io/KorailTalk/" target="_blank"><span>Git hub
+                                                <img src="img/2git.png" alt="git"></span></a></li>
+                                    <li><a href="img/코레일.pdf" target="_blank"><span>Process 📁</span></a></li>
+                                    <li><a href="https://www.figma.com/design/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?node-id=0-1&p=f&t=356CBRYXXBNvfesf-0"
+                                            target="_blank"><span>Figma <img src="img/2figma.png"
+                                                    alt="figma"></span></a>
+                                    </li>
+                                    <li><a href="img/ktx_notion.pdf" target="_blank"><span>Notion <img
+                                                    src="img/2notion.png" alt="notion"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="solo__shot">
+                            <div class="solo__win solo__win--fit"><img src="img/korail.png" alt="코레일톡"></div>
+                            <div class="solo__win solo__win--qr"><img src="img/korail_qr.png" alt="qr"></div>
+                        </div>
+                    </article>
+                    <article class="solo__item">
+                        <span class="solo__idx">05</span>
+                        <div class="solo__main">
+                            <div class="solo__head">
+                                <h3 class="solo__name">스타벅스</h3><span class="solo__sub">앱 리디자인 프로젝트 · 메인페이지 ·
+                                    서브페이지</span>
+                            </div>
+                            <div class="solo__text">
+                                <p><em>스타벅스 모바일 앱 리디자인</em>입니다.<br />
+                                    기존 앱의 사용자 조사로 개선점을 찾았고, 브랜드의 세련된 이미지는 지키면서 사용 편의를 높이는 방향으로 진행했습니다.
                                 </p>
-                            </div><!-- .box end -->
+                                <ul class="list">
+                                    <li>#Photoshop</li>
+                                </ul>
+                                <span class="solo__role">기획/디자인 100%</span>
+                                <ul class="btn">
 
+                                    <li><a href="img/starpdf.pdf" target="_blank"><span>Project 📒</span></a></li>
+                                    <li><a href="img/스타벅스.pdf" target="_blank"><span>Process 📁</span></a></li>
 
-
-
-
-                            <ul class="list">
-                                <li>#Photoshop</li>
-                            </ul><!-- list end -->
-
-
-                            <span>기획/디자인 100%</span>
-
-                            <em>📌 Click here </em>
-                            <ul class="btn">
-
-                                <li><a href="img/starpdf.pdf" target="_blank"><span>Project 📒</span></a></li>
-                                <li><a href="img/스타벅스.pdf" target="_blank"><span>Process 📁</span></a></li>
-
-                                <li><a href="img/sta_notion.pdf" target="_blank"><span>Notion <img src="img/2notion.png"
-                                                alt="notion"></span></a></li>
-                            </ul><!-- btn end -->
-
-                        </div><!-- .text end -->
-
-
-
-
-
-                        <div class="image">
-
-                            <img src="img/star.png" alt="스타벅스이미지">
-
-                        </div><!-- .image end -->
-
-
-
-
-
-                    </section><!-- section-5 end -->
-                </div><!-- div-inner-5 end -->
-
-
-                <div class="div-inner-6">
-                    <section class="section-6">
-                        <div class="text">
-                            <div class="box">
-                                <div class="title">
-                                    <h2>쏘카</h2>
-
-                                    <div class="color">
-                                        <p>클론코딩</p>
-                                        <ul><!-- #1770FC -->
-
-                                            <li>메인페이지</li>
-
-
-                                        </ul>
-                                    </div><!-- .color end -->
-                                </div><!-- .title end -->
-
-
-                                <p>한국 최대 규모의 카셰어링 업체 <em>쏘카의 반응형 웹사이트 클론코딩 페이지</em>입니다.<br />
-                                    현재 지속적으로 업데이트중입니다.
-
-                                </p>
-                            </div><!-- .box end -->
-
-
-
-
-
-
-                            <ul class="list">
-
-                                <li>#HTML5</li>
-                                <li>#CSS</li>
-                                <li>#JavaScript</li>
-                                <li>#jQuery</li>
-
-                                <li>#AOS</li>
-                                <li>#SwiperSlide</li>
-                            </ul><!-- list end -->
-
-
-                            <span>클론코딩 100%</span>
-
-                            <em>📌 Click here </em>
-                            <ul class="btn">
-
-                                <li><a href="https://i-wisheeee.github.io/socar/#" target="_blank"><span>Web
-                                            site💻</span></a></li>
-                            </ul><!-- btn end -->
-
-                        </div><!-- .text end -->
-
-
-
-
-
-                        <div class="mockup">
-                            <p>💬이미지위에 마우스를 갖다대면 사진이 스크롤됩니다.🖱</p>
-                            <div class="wrap">
-
-                                <div class="image">
-
-                                    <img src="img/socar.jpg" alt="쏘카">
-
-                                </div><!-- .image end -->
-
-                            </div><!-- wrap end -->
-
-                        </div><!-- .mockup end -->
-
-
-
-
-                    </section><!-- section-6 end -->
-                </div><!-- div-inner-6 end -->
-
-
-            </section><!-- section-04 end -->
+                                    <li><a href="img/sta_notion.pdf" target="_blank"><span>Notion <img
+                                                    src="img/2notion.png" alt="notion"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="solo__shot">
+                            <div class="solo__win solo__win--fit"><img src="img/star.png" alt="스타벅스이미지"></div>
+                        </div>
+                    </article>
+                </div>
+            </section><!-- solo end -->
 
 
 
@@ -1544,25 +1542,15 @@
 
             <section class="section-05" id="section-05">
 
-               
+
                 <section id="projects">
                     <div class="project-left">
                         <div class="project-left-content">
                             <div class="overline">GRAPHIC DESIGN</div>
-                            <h2 class="project-title"><em>A Collection of Works</em> <br> in Branding, Editorial, and
-                                Digital Design.</h2>
+                            <h2 class="project-title"><em>Graphic Works</em> <br> Posters, GIF, and Detail Pages.</h2>
                             <p class="project-description">
-                                We bridge the gap between function and artistry. Explore our curated selection of
-                                residential and commercial architectural projects.
+                                Illustrator와 Photoshop으로 제작한 포스터, GIF, 상세페이지 작업입니다.
                             </p>
-                            <a href="#" class="btn-arrow">
-                                View All Projects
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                            </a>
                         </div>
                     </div>
 
@@ -1653,7 +1641,7 @@
                                 </div>
                                 <div class="card-meta">
                                     <div class="meta-left">
-                                        <h3>파마자쇼핑몰 상세페이지 제작 <br /> (이미지를 클릭해주세요)</h3>
+                                        <h3>파자마쇼핑몰 상세페이지 제작 <br /> (이미지를 클릭해주세요)</h3>
                                         <p>포토샵을 활용한 파자마 쇼핑몰 상세페이지를 제작하였습니다.
                                             *일부 이미지는 포트폴리오용제작목적으로 사용되었으며 출처가 있음을 밝힙니다. 출처:핀터레스트-w컨셉*</p>
                                     </div>
@@ -1689,7 +1677,10 @@
 
         </main><!-- .main end -->
         <div class="topbtn" id="topbtn">
-            <a href="#"><img src="img/top.svg" alt="top"><em>top</em></a>
+            <a href="#" aria-label="맨 위로"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                </svg></a>
         </div><!-- topbtn end -->
 
 
@@ -1721,45 +1712,34 @@
                 <div class="footnav">
                     <ul class="gnb">
                         <li>
-                            <a class="depth-01">Q. 이번 포트폴리오를 준비하면서 어떤 점이 가장어려웠나요?</a>
+                            <a class="depth-01">Q. 포트폴리오를 준비하면서 가장 어려웠던 점은 무엇인가요?</a>
                             <ul class="depth-02">
-                                <li><em>A.</em> 디자인이라는 분야를 새로 접하다 보니 모든것이 낯설고 생소해서 4개월이라는 기간이
-                                    너무짧고 부족했던 것이 사실이었습니다. <br />
-                                    그래서 컨셉에맞는 스크립트를 연구하고 결과값을 도출해내는것에 한계가 있었고 라이브러리들을 수집하는데에 있어서
-                                    시간들을 많이 소모하기도하고 <br />
-                                    결국엔 또 새롭게 포트폴리오를 재정비하게 되면서 체력소모에 큰 지장을 겪기도 했지만 실패를 경험하면서 도출해 냈던
-                                    과정속에서 결국엔 더 많은 지식을 쌓는데에 도움이되었다고 생각합니다.
+                                <li><em>A.</em> 디자인을 처음 접하다 보니 모든 것이 낯설었고, 컨셉에 맞는 스크립트를 연구해 결과를 내는 데 한계가 있었습니다. <br />
+                                    라이브러리를 찾고 익히는 데 시간이 많이 들었고, 포트폴리오를 한 번 갈아엎고 다시 정리하느라 체력적으로도 힘들었습니다. <br />
+                                    다만 실패하고 다시 풀어가는 과정에서 오히려 더 많이 배웠다고 생각합니다.
                                 </li>
                             </ul><!-- depth-02 end -->
                         </li>
                         <li>
-                            <a class="depth-01">Q.5개월의 교육 기간동안 어떤점을 배우게되었나요?</a>
+                            <a class="depth-01">Q. 교육 과정에서 무엇을 배웠나요?</a>
                             <ul class="depth-02">
-                                <li><em>A.</em>5개월 동안 단순히 예쁘게 만드는 디자인이 전부가 아니라는 것을 깊게 배웠습니다.
-                                    처음에는 개성이나 독창성이 가장 중요하다고 생각했지만, 교육 과정에서 가장 먼저 깨달은 것은 디자인은 사용자의 입장에서 시작해야 한다는
-                                    점이었습니다.<br />
+                                <li><em>A.</em> 예쁘게 만드는 것이 디자인의 전부가 아니라는 점을 배웠습니다.
+                                    처음에는 개성과 독창성이 가장 중요하다고 생각했지만, 디자인은 사용자의 입장에서 시작해야 한다는 것을 가장 먼저 깨달았습니다.<br />
 
-                                    두 번째로는 접근성과 심미성의 균형입니다. 누구나 편하게 사용할 수 있으면서도 브랜드의 감성과 미적 완성도를 동시에 담아내는 것이 진짜 디자인이라는
-                                    것을 배웠습니다.<br />
+                                    두 번째는 접근성과 심미성의 균형입니다. 누구나 편하게 쓸 수 있으면서도 브랜드의 감성과 완성도를 함께 담아내는 것이 좋은 디자인이라고
+                                    배웠습니다.<br />
 
-                                    이 과정을 통해 ‘디자인은 배려를 시각화하는 것’이라는 말을 몸소 느끼게 되었고, 인생을 살아오면서 손에 꼽히게 열정을 가지고 배우며 성장한
-                                    시간들이었습니다.<br />
-                                    앞으로도 계속 배우고 성장할 준비가 되어 있으며, 새로운 환경에서도 열린 마음으로 적극적으로 배우고 빠르게 흡수하는 사람이 될것입니다.
+                                    '디자인은 배려를 시각화하는 것'이라는 말을 몸으로 느낀 시간이었고, 앞으로도 새로운 환경에서 열린 마음으로 빠르게 배우겠습니다.
                                 </li>
                             </ul><!-- depth-02 end -->
                         </li>
                         <li>
-                            <a class="depth-01">Q.어떤 사원이 되고싶나요?/ 이전의 회사에서는 왜 이직을 하게되었나요?</a>
+                            <a class="depth-01">Q. 어떤 사원이 되고 싶나요?</a>
                             <ul class="depth-02">
-                                <li><em>A.</em>저는 수동적으로 지시만 따르는 사람이 아니라, 배운 것 이상을 스스로 확장해 나갈 수 있는 능동적인 사원이 되고 싶습니다.
-                                    하나를 배우면 그대로 적용하는 데서 끝나는 것이 아니라, 왜 그런 방식이 필요한지 이해하고 여러 관점에서 응용할 수 있는 사람이 되고자
-                                    합니다.<br />
+                                <li><em>A.</em> 지시만 따르는 사람이 아니라, 배운 것을 스스로 확장해 나가는 능동적인 사원이 되고 싶습니다.
+                                    하나를 배우면 그대로 적용하는 데서 끝나지 않고, 왜 그런 방식이 필요한지 이해해서 여러 관점으로 응용하겠습니다.<br />
 
-                                    이전 직장에서 이직을 결심한 이유도 성장의 한계 때문이었습니다. 더 배우고, 더 발전하고, 팀에 실질적인 도움이 되는 인재가 되고 싶은 마음이 컸기
-                                    때문입니다.<br />
-
-                                    이번 기회가 주어진다면, 회사가 필요로 하는 방향에 맞춰 제 역량을 적극적으로 키워 ‘함께 성장하는 사람’으로서 꼭 필요한 사원이 되고
-                                    싶습니다.<br />
+                                    회사가 필요로 하는 방향에 맞춰 역량을 키우며, 함께 성장하는 사람이 되겠습니다.<br />
                                 </li>
                             </ul><!-- depth-02 end -->
                         </li>
@@ -1777,7 +1757,8 @@
                         <li><a href="#main_visual">main</a></li>
                         <li><a href="#section-01">intro</a></li>
                         <li><a href="#section-02">about</a></li>
-                        <li><a href="#section-04">project</a></li>
+                        <li><a href="#work">work</a></li>
+                        <li><a href="#mywork">project</a></li>
                         <li><a href="#section-05">graphic design</a></li>
                     </ul>
                 </div><!-- .menu end -->
@@ -1813,12 +1794,32 @@
 
 
 
-            <p class="all"> 본 홈페이지는 포트폴리오용으로 제작되었으며 지속적으로 업데이트 예정입니다. <br /> © 2025 김소원. All rights reserved.
+            <p class="all"> 본 홈페이지는 포트폴리오용으로 제작되었으며 지속적으로 업데이트 예정입니다. <br /> © 2026 김소원. All rights reserved.
             </p>
 
         </footer><!-- footer end -->
 
     </div><!-- wrap end -->
+<script>
+    (function () {
+        const dlg = document.createElement("dialog");
+        dlg.className = "zoom-dialog";
+        dlg.innerHTML = '<button type="button" class="zoom-dialog__close" aria-label="닫기">×</button><div class="zoom-dialog__scroll"><img alt=""></div>';
+        document.body.appendChild(dlg);
+        const img = dlg.querySelector("img");
+        document.addEventListener("click", function (e) {
+            const b = e.target.closest("button.work__zoom");
+            if (b) {
+                img.src = b.dataset.full;
+                img.alt = b.querySelector("img").alt;
+                dlg.scrollTop = 0;
+                dlg.showModal();
+            } else if (e.target === dlg || e.target.closest(".zoom-dialog__close")) {
+                dlg.close();
+            }
+        });
+    })();
+</script>
 </body>
 
 </html>

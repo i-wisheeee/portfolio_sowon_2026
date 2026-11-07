@@ -1,162 +1,15 @@
-/* section-01 : DotGrid + ScrollReveal + ShinyText */
-.section-01 .card-cover .dot-grid {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.section-01 .card-cover .text {
-  position: relative;
-  z-index: 1;
-}
-
-.section-01 .card-cover .text .steps span.word {
-  display: inline-block;
-  padding: 0;
-  background: none;
-  border-radius: 0;
-  font-size: inherit;
-  color: inherit;
-  will-change: opacity, filter;
-}
-
-.section-01 .card-cover .text .steps span:not(.word) span.word {
-  color: transparent;
-  background: linear-gradient(120deg, rgba(234, 234, 234, 0.7) 40%, #fff 50%, rgba(234, 234, 234, 0.7) 60%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shiny-text 4s linear infinite;
-}
-
-.section-01 .card-cover .text .steps {
-  position: relative;
-  display: grid;
-  gap: 7rem;
-  max-width: 96rem;
-  margin: 0 auto 10rem;
-  text-align: left;
-}
-
-.section-01 .card-cover .text .steps::before {
-  content: '';
-  position: absolute;
-  top: 3rem;
-  bottom: 3rem;
-  left: 1.9rem;
-  width: 0.2rem;
-  background: rgba(17, 0, 78, 0.25);
-}
-
-.section-01 .card-cover .text .steps li {
-  display: grid;
-  grid-template-columns: 4rem 22rem 1fr;
-  align-items: center;
-  column-gap: 3rem;
-}
-
-.section-01 .card-cover .text .steps strong {
-  -webkit-text-stroke: 0.1rem #11004e;
-  -webkit-text-fill-color: #f7f8f4;
-  font-size: 7.2rem;
-  font-weight: bold;
-  line-height: 1;
-  letter-spacing: 0;
-}
-
-.section-01 .card-cover .text .steps p {
-  margin: 0;
-  color: #03086b;
-  font-size: 2rem;
-  font-weight: normal;
-  line-height: 1.8;
-  text-align: left;
-}
-
-.section-01 .card-cover .text .steps .mark {
-  position: relative;
-  justify-self: center;
-  background: #11004e;
-}
-
-.section-01 .card-cover .text .steps .mark--dot {
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 50%;
-}
-
-.section-01 .card-cover .text .steps .mark--line {
-  width: 3.2rem;
-  height: 0.4rem;
-  border-radius: 0.2rem;
-}
-
-.section-01 .card-cover .text .steps .mark--screen {
-  width: 3.2rem;
-  height: 2.4rem;
-  border: 0.3rem solid #11004e;
-  border-radius: 0.4rem;
-  background: #f7f8f4;
-}
-
-@media (max-width: 760px) {
-  .section-01 .card-cover .text .steps {
-    gap: 4rem;
-    margin-bottom: 6rem;
-  }
-
-  .section-01 .card-cover .text .steps::before {
-    left: 1.4rem;
-  }
-
-  .section-01 .card-cover .text .steps li {
-    grid-template-columns: 3rem 1fr;
-    row-gap: 1rem;
-    column-gap: 1.6rem;
-  }
-
-  .section-01 .card-cover .text .steps p {
-    grid-column: 2;
-    font-size: 1.5rem;
-  }
-
-  .section-01 .card-cover .text .steps strong {
-    font-size: 4.4rem;
-  }
-}
-
-@media (max-width: 1024px) {
-  .section-01 .card-cover .text .steps span:not(.word) span.word {
-    background-image: linear-gradient(120deg, #11004e 40%, #2f74ff 50%, #11004e 60%);
-  }
-}
-
-@keyframes shiny-text {
-  from {
-    background-position: 150% 0;
-  }
-
-  to {
-    background-position: -50% 0;
-  }
-}
-
-.section-02 #design {
+#design {
   background: none;
   border: 0;
   box-shadow: none;
   backdrop-filter: none;
 }
 
-.section-02 #design::before {
+#design::before {
   display: none;
 }
 
-.section-02 #design .contact .group {
+#design .contact .group {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -165,14 +18,14 @@
   white-space: nowrap;
 }
 
-.section-02 #design .lanyard.is-ready {
+#design .lanyard.is-ready {
   position: relative;
   height: 56rem;
   margin-bottom: 3rem;
   overflow: hidden;
 }
 
-.section-02 #design .lanyard.is-ready img {
+#design .lanyard.is-ready img {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -188,76 +41,29 @@
 }
 
 @media (max-width: 760px) {
-  .section-02 #design .lanyard.is-ready {
+  #design .lanyard.is-ready {
     height: 44rem;
   }
 }
 
-.section-02 #tech {
-  background: #fffdf6;
-  border: 0.1rem solid #e9e3d3;
-  border-top: 0.8rem solid #2f74ff;
-  border-radius: 0.6rem;
-  box-shadow: 0 1.2rem 3rem rgba(17, 0, 78, 0.18);
+.section-02 :is(#tech, #tech2) {
+  background: none;
+  border: 0;
+  box-shadow: none;
   backdrop-filter: none;
 }
 
-.section-02 #tech::before {
+.section-02 :is(#tech, #tech2)::before {
   display: none;
 }
 
-.section-02 .inner #tech .item h2 {
+.section-02 .inner :is(#tech, #tech2) .item h2 {
   padding-bottom: 0.6rem;
   border-bottom: 0.2rem solid #11004e;
   color: #11004e;
   -webkit-text-fill-color: #11004e;
   -webkit-text-stroke: 0;
   letter-spacing: 0.2rem;
-}
-
-.section-02 #tech.is-folding {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.section-02 #tech.is-folding > :not(.fold) {
-  opacity: 0;
-}
-
-.section-02 #tech .fold {
-  position: absolute;
-  inset: 0;
-  perspective: 160rem;
-  pointer-events: none;
-}
-
-.section-02 #tech .fold__panel {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  transform-style: preserve-3d;
-}
-
-.section-02 #tech .fold__clip {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  backface-visibility: hidden;
-}
-
-.section-02 #tech .fold__shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(17, 0, 78, 0.35), rgba(17, 0, 78, 0.05));
-}
-
-.section-02 #tech .fold__back {
-  position: absolute;
-  inset: 0;
-  background: #f3efe3;
-  transform: rotateX(180deg);
-  backface-visibility: hidden;
 }
 
 /* section-02 skill : FolderFloat */
@@ -458,10 +264,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .section-01 .card-cover .text .steps span:not(.word) span.word {
-    animation: none;
-  }
-
   .folder-float__front,
   .folder-float__item,
   .folder-float[data-open] .folder-float__item {
