@@ -1277,19 +1277,17 @@
                             <span class="work__idx">03</span>
                             <h3>배너</h3>
                         </div>
-                        <div class="work__body">
-                            <div class="work__media">[이미지 추가 필요]</div>
-                            <p class="work__desc">[내용 추가 필요]</p>
-                            <dl class="work__meta">
-                                <div>
-                                    <dt>기간</dt>
-                                    <dd>[내용 추가 필요]</dd>
-                                </div>
-                                <div>
-                                    <dt>사용 툴</dt>
-                                    <dd>[내용 추가 필요]</dd>
-                                </div>
-                            </dl>
+                        <div class="banner" role="region" aria-roledescription="carousel" aria-label="배너 작업">
+                            <button type="button" class="banner__btn" data-dir="-1" aria-label="이전 배너">&larr;</button>
+                            <div class="banner__stage" tabindex="0">
+                                <div class="banner__slide" role="group" aria-roledescription="slide" aria-label="1 / 5"><img src="img/2027%E1%84%83%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A7%E1%86%A8%E1%84%86%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AB%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5.png" alt="2027달력메인배너"></div>
+                                <div class="banner__slide" role="group" aria-roledescription="slide" aria-label="2 / 5" hidden><img src="img/%E1%84%87%E1%85%B5%E1%84%8C%E1%85%B3%E1%84%91%E1%85%A9%E1%86%B7AI%20%E1%84%8E%E1%85%B5%E1%86%BC%E1%84%8E%E1%85%A1%E1%86%AB%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5%E1%84%86%E1%85%A9%E1%84%87%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AF_%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5.jpg" alt="비즈폼AI 칭찬배너모바일_매거진배너"></div>
+                                <div class="banner__slide" role="group" aria-roledescription="slide" aria-label="3 / 5" hidden><img src="img/%E1%84%87%E1%85%B5%E1%84%8C%E1%85%B3%E1%84%91%E1%85%A9%E1%86%B7%E1%84%8B%E1%85%A9%E1%84%91%E1%85%B3%E1%86%AB%E1%84%80%E1%85%A1%E1%86%B7%E1%84%89%E1%85%A1%E1%84%86%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AB%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5_%E1%84%86%E1%85%A9%E1%84%87%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AF.png" alt="비즈폼오픈감사메인배너_모바일"></div>
+                                <div class="banner__slide" role="group" aria-roledescription="slide" aria-label="4 / 5" hidden><img src="img/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5%E1%84%8B%E1%85%B5%E1%86%AB%E1%84%80%E1%85%B5%E1%84%89%E1%85%A5%E1%84%89%E1%85%B5%E1%86%A8%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%86%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AB%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5_pc.jpg" alt="상반기인기서식전메인배너_pc"></div>
+                                <div class="banner__slide" role="group" aria-roledescription="slide" aria-label="5 / 5" hidden><img src="img/%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%B7%E1%84%8E%E1%85%A1%E1%86%AB%E1%84%89%E1%85%B3%E1%84%83%E1%85%B5%E1%86%AF%E1%84%8F%E1%85%A1%E1%84%8F%E1%85%A1%E1%84%8B%E1%85%A9%E1%84%90%E1%85%A9%E1%86%A8%E1%84%8E%E1%85%A2%E1%84%82%E1%85%A5%E1%86%AF%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5.jpg" alt="타임찬스딜카카오톡채널배너"></div>
+                            </div>
+                            <button type="button" class="banner__btn" data-dir="1" aria-label="다음 배너">&rarr;</button>
+                            <span class="banner__count" aria-live="polite">1 / 5</span>
                         </div>
                     </li>
                     <li class="work__item">
@@ -1817,6 +1815,36 @@
             } else if (e.target === dlg || e.target.closest(".zoom-dialog__close")) {
                 dlg.close();
             }
+        });
+    })();
+</script>
+<script>
+    (function () {
+        const box = document.querySelector(".banner");
+        if (!box) return;
+        const stage = box.querySelector(".banner__stage");
+        const slides = [...stage.children];
+        const count = box.querySelector(".banner__count");
+        const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let cur = 0;
+        const show = (k) => {
+            cur = (k + slides.length) % slides.length;
+            slides.forEach((s, i) => { s.hidden = i !== cur; });
+            count.textContent = (cur + 1) + " / " + slides.length;
+            if (!reduce) gsap.fromTo(slides[cur], { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out", clearProps: "opacity" });
+        };
+        box.querySelectorAll(".banner__btn").forEach((b) => b.addEventListener("click", () => show(cur + Number(b.dataset.dir))));
+        stage.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") { e.preventDefault(); show(cur + 1); }
+            if (e.key === "ArrowLeft") { e.preventDefault(); show(cur - 1); }
+        });
+        let sx = null;
+        stage.addEventListener("pointerdown", (e) => { sx = e.clientX; });
+        window.addEventListener("pointerup", (e) => {
+            if (sx === null) return;
+            const d = e.clientX - sx;
+            sx = null;
+            if (Math.abs(d) > 50) show(cur + (d < 0 ? 1 : -1));
         });
     })();
 </script>
