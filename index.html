@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>김소원 포트폴리오 | 웹 퍼블리셔</title>
+    <link rel="icon" type="image/svg+xml" href="img/%ED%81%B4%EB%A1%9C%EB%B2%84%ED%8C%8C%EB%B9%84%EC%BD%98.svg?v=1">
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Nunito:wght@800&family=Playfair+Display:ital@0;1&display=swap">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/effects.css">
+    <link rel="stylesheet" href="css/main.css?v=20261109f">
+    <link rel="stylesheet" href="css/effects.css?v=20261109c">
 
 
 
@@ -286,7 +287,7 @@
 
             if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                 gsap.registerPlugin(SplitText);
-                document.querySelectorAll(".section-01 h2, .section-03 .con01 h2, .section-05 .project-title, .work__head h2, .solo__title").forEach((title) => {
+                document.fonts.ready.then(() => document.querySelectorAll(".section-01 h2, .section-03 .con01 h2, .section-05 .project-title, .work__head h2, .solo__title").forEach((title) => {
                     SplitText.create(title, {
                         type: "words, chars",
                         mask: "chars",
@@ -299,7 +300,7 @@
                             scrollTrigger: { trigger: title, start: "top 85%", once: true },
                         }),
                     });
-                });
+                }));
                 gsap.utils.toArray(".work__item, .solo__item").forEach((el) => {
                     gsap.from(el, {
                         y: 80,
@@ -640,32 +641,12 @@
                 });
                 sync();
                 schedule();
-
-                const fillChars = reduce ? [] : SplitText.create(highlight, { type: "chars" }).chars;
-                if (fillChars.length) {
-                    gsap.set(fillChars, { color: "rgba(241,255,192,0.22)" });
-                    ScrollTrigger.matchMedia({
-                        "(min-width: 1101px)": () => {
-                            gsap.timeline({
-                                scrollTrigger: {
-                                    trigger: "#section-01", start: "top top", end: () => "+=" + innerHeight * 1.2,
-                                    pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 1
-                                }
-                            }).to(fillChars, { color: "#f1ffc0", ease: "none", stagger: 0.04 });
-                        },
-                        "(max-width: 1100px)": () => {
-                            gsap.to(fillChars, {
-                                color: "#f1ffc0", ease: "none", stagger: 0.04,
-                                scrollTrigger: { trigger: highlight, start: "top 85%", end: "top 40%", scrub: 0.6 }
-                            });
-                        }
-                    });
-                }
             }
 
             // Run on load
-            if (document.readyState === "complete") { initAboutStack(); initScroll(); }
-            else window.addEventListener("load", () => { initAboutStack(); initScroll(); });
+            const run = () => document.fonts.ready.then(() => { initAboutStack(); initScroll(); });
+            if (document.readyState === "complete") run();
+            else window.addEventListener("load", run);
 
 
             //탑버튼
@@ -821,7 +802,7 @@
 
 
             <section class="main_visual">
-                <div class="stage">
+                <div class="stage"> 
                     <h1 class="textox" aria-label="Connecting The Dots">
                         <svg viewBox="0 0 1400 240" aria-hidden="true">
                             <text x="700" y="165" text-anchor="middle">Connecting The Dots</text>
@@ -1070,16 +1051,17 @@
             <section class="work" id="work">
                 <header class="work__head">
                     <span class="work__no">01</span>
-                    <h2>실무<small>Work</small></h2>
-                    <p>[내용 추가 필요]</p>
+                    <h2>실무 프로젝트<small>2026.03–2026.10</small></h2>
+                    <p>㈜비즈폼에서 웹디자이너 & 퍼블리셔로 근무하며 실제 서비스에 반영한 작업물입니다.</p>
                 </header>
                 <ol class="work__list">
                     <li class="work__item">
                         <div class="work__title">
                             <span class="work__idx">01</span>
                             <div class="work__row">
-                                <h3>정기메일</h3>
-                                <div class="work__tabs" role="tablist" aria-label="정기메일 작업 5개"><button type="button" class="work__tab is-on" role="tab" id="mail-tab-1" aria-controls="mail-panel-1" aria-selected="true" tabindex="0">01</button><button type="button" class="work__tab" role="tab" id="mail-tab-2" aria-controls="mail-panel-2" aria-selected="false" tabindex="-1">02</button><button type="button" class="work__tab" role="tab" id="mail-tab-3" aria-controls="mail-panel-3" aria-selected="false" tabindex="-1">03</button><button type="button" class="work__tab" role="tab" id="mail-tab-4" aria-controls="mail-panel-4" aria-selected="false" tabindex="-1">04</button><button type="button" class="work__tab" role="tab" id="mail-tab-5" aria-controls="mail-panel-5" aria-selected="false" tabindex="-1">05</button></div>
+                                <h3>정기메일 상단 디자인</h3>
+                                <p>이미지 클릭시 전체 이미지 확인이 가능합니다.</p>
+                                <div class="work__tabs work__tabs--named" role="tablist" aria-label="정기메일 작업 5개"><button type="button" class="work__tab is-on" role="tab" id="mail-tab-1" aria-controls="mail-panel-1" aria-selected="true" tabindex="0"><b>01</b>탁상달력</button><button type="button" class="work__tab" role="tab" id="mail-tab-2" aria-controls="mail-panel-2" aria-selected="false" tabindex="-1"><b>02</b>종합소득세</button><button type="button" class="work__tab" role="tab" id="mail-tab-3" aria-controls="mail-panel-3" aria-selected="false" tabindex="-1"><b>03</b>계약서식패키지</button><button type="button" class="work__tab" role="tab" id="mail-tab-4" aria-controls="mail-panel-4" aria-selected="false" tabindex="-1"><b>04</b>9월 인사말</button><button type="button" class="work__tab" role="tab" id="mail-tab-5" aria-controls="mail-panel-5" aria-selected="false" tabindex="-1"><b>05</b>국민연금</button></div>
                             </div>
                         </div>
                         <div class="work__body" id="mail-panel-1" role="tabpanel" aria-labelledby="mail-tab-1">
@@ -1088,11 +1070,11 @@
                             <dl class="work__meta">
                                 <div>
                                     <dt>기획 포인트</dt>
-                                    <dd>우주 콘셉트 배경으로 신제품 탁상달력을 돋보이게 하고, 실제 구매 후기를 함께 노출해 신뢰도를 높임</dd>
+                                    <dd>우주 콘셉트 배경으로 신제품 탁상달력을 돋보이게 연출하고, 실제 구매 후기를 GIF로 순환 노출해 신뢰도를 높였습니다.</dd>
                                 </div>
                                 <div>
                                     <dt>역할</dt>
-                                    <dd>디자인 · HTML 코딩</dd>
+                                    <dd>디자인 · HTML 코딩 · 정기메일 발송 세팅 (넷피온)</dd>
                                 </div>
                                 <div>
                                     <dt>성과</dt>
@@ -1106,11 +1088,11 @@
                             <dl class="work__meta">
                                 <div>
                                     <dt>기획 포인트</dt>
-                                    <dd>체크리스트 형식으로 &quot;나도 해당되나?&quot;를 스스로 확인하게 해 참여를 유도</dd>
+                                    <dd>체크리스트 형식으로 "나도 해당되나?"를 스스로 확인하게 해 참여를 유도하는 방향으로 디자인하였습니다.</dd>
                                 </div>
                                 <div>
                                     <dt>역할</dt>
-                                    <dd>디자인 · HTML 코딩</dd>
+                                    <dd>디자인 · HTML 코딩 · 정기메일 발송 세팅 (넷피온)</dd>
                                 </div>
                                 <div>
                                     <dt>성과</dt>
@@ -1124,11 +1106,11 @@
                             <dl class="work__meta">
                                 <div>
                                     <dt>기획 포인트</dt>
-                                    <dd>실제 서식 화면을 미리보기로 보여줘 &quot;바로 쓸 수 있다&quot;는 느낌을 주고 클릭을 유도</dd>
+                                    <dd>실제 서식 화면을 미리보기로 보여줘 "바로 쓸 수 있다"는 인상을 주고, 일부는 가려 궁금증을 유발해 클릭을 유도하도록 디자인했습니다.</dd>
                                 </div>
                                 <div>
                                     <dt>역할</dt>
-                                    <dd>디자인 · HTML 코딩</dd>
+                                    <dd>디자인 · HTML 코딩 · 정기메일 발송 세팅 (넷피온)</dd>
                                 </div>
                                 <div>
                                     <dt>성과</dt>
@@ -1142,11 +1124,11 @@
                             <dl class="work__meta">
                                 <div>
                                     <dt>기획 포인트</dt>
-                                    <dd>억새 일러스트로 가을 계절감을 살려, 정보성 메일의 딱딱한 인상을 줄임</dd>
+                                    <dd>억새 일러스트로 가을 계절감을 살리고, 다양한 인사말 구성을 GIF로 순환 노출해 선택의 폭을 보여주는 디자인입니다.</dd>
                                 </div>
                                 <div>
                                     <dt>역할</dt>
-                                    <dd>디자인 · HTML 코딩</dd>
+                                    <dd>디자인 · HTML 코딩 · 정기메일 발송 세팅 (넷피온)</dd>
                                 </div>
                                 <div>
                                     <dt>성과</dt>
@@ -1160,11 +1142,11 @@
                             <dl class="work__meta">
                                 <div>
                                     <dt>기획 포인트</dt>
-                                    <dd>딱딱한 법령 개정 안내를 업데이트 콘셉트의 밝은 그래픽으로 풀어, 친근하게 전달</dd>
+                                    <dd>딱딱한 법령 개정 안내를 업데이트 콘셉트의 밝은 그래픽으로 풀어 친근하게 전달했으며, 개정 사항은 일부 가려 궁금증을 유발하고 클릭으로 이어지도록 디자인했습니다.</dd>
                                 </div>
                                 <div>
                                     <dt>역할</dt>
-                                    <dd>디자인 · HTML 코딩</dd>
+                                    <dd>디자인 · HTML 코딩 · 정기메일 발송 세팅 (넷피온)</dd>
                                 </div>
                                 <div>
                                     <dt>성과</dt>
@@ -1178,7 +1160,8 @@
                             <span class="work__idx">02</span>
                             <div class="work__row">
                                 <h3>핫클릭 상세페이지</h3>
-                                <div class="work__tabs" role="tablist" aria-label="핫클릭 상세페이지 작업 5개"><button type="button" class="work__tab is-on" role="tab" id="detail-tab-1" aria-controls="detail-panel-1" aria-selected="true" tabindex="0">01</button><button type="button" class="work__tab" role="tab" id="detail-tab-2" aria-controls="detail-panel-2" aria-selected="false" tabindex="-1">02</button><button type="button" class="work__tab" role="tab" id="detail-tab-3" aria-controls="detail-panel-3" aria-selected="false" tabindex="-1">03</button><button type="button" class="work__tab" role="tab" id="detail-tab-4" aria-controls="detail-panel-4" aria-selected="false" tabindex="-1">04</button><button type="button" class="work__tab" role="tab" id="detail-tab-5" aria-controls="detail-panel-5" aria-selected="false" tabindex="-1">05</button></div>
+                                <p>이미지 클릭시 전체 이미지 확인이 가능합니다.</p>
+                                <div class="work__tabs work__tabs--named" role="tablist" aria-label="핫클릭 상세페이지 작업 5개"><button type="button" class="work__tab is-on" role="tab" id="detail-tab-1" aria-controls="detail-panel-1" aria-selected="true" tabindex="0"><b>01</b>AI서식패키지</button><button type="button" class="work__tab" role="tab" id="detail-tab-2" aria-controls="detail-panel-2" aria-selected="false" tabindex="-1"><b>02</b>견적서패키지</button><button type="button" class="work__tab" role="tab" id="detail-tab-3" aria-controls="detail-panel-3" aria-selected="false" tabindex="-1"><b>03</b>임대차계약서</button><button type="button" class="work__tab" role="tab" id="detail-tab-4" aria-controls="detail-panel-4" aria-selected="false" tabindex="-1"><b>04</b>여름휴가</button><button type="button" class="work__tab" role="tab" id="detail-tab-5" aria-controls="detail-panel-5" aria-selected="false" tabindex="-1"><b>05</b>근태서식패키지</button></div>
                             </div>
                         </div>
                         <div class="work__body" id="detail-panel-1" role="tabpanel" aria-labelledby="detail-tab-1">
@@ -1314,21 +1297,21 @@
             </section><!-- work end -->
 
             <section class="solo" id="mywork">
-                <h2 class="solo__title">개인프로젝트<small>Personal Project</small></h2>
+                <header class="work__head">
+                    <span class="work__no">02</span>
+                    <h2>개인프로젝트<small>Personal Project</small></h2>
+                    <p>기존 서비스를 분석하고 직접 기획·디자인·퍼블리싱까지 진행한 리뉴얼 작업물입니다.</p>
+                </header>
                 <div class="solo__list">
-                    <article class="solo__item">
-                        <span class="solo__idx">01</span>
-                        <div class="solo__main">
-                            <div class="solo__head">
-                                <h3 class="solo__name">유한킴벌리</h3><span class="solo__sub">반응형 웹 리뉴얼 프로젝트 · 메인페이지 ·
-                                    서브페이지</span>
-                            </div>
-                            <div class="solo__text">
-                                <p><em>유한킴벌리 웹사이트 반응형 리뉴얼</em>입니다.<br />
-                                    기존 풀페이지 방식에서 사용자가 불편했던 부분을 개선하고, GSAP과 JavaScript/jQuery로 인터랙션을 구현했습니다.<br />
-                                    현재 반응형 대응을 진행하고 있습니다.
-                                </p>
-                                <ul class="list">
+                    <article class="feature">
+                        <div class="feature__bar"><span class="solo__idx">01</span><div class="solo__head"><h3 class="solo__name">유한킴벌리 반응형 웹사이트 리뉴얼</h3><span class="solo__sub">반응형 웹 리뉴얼 프로젝트 · 메인페이지</span></div></div>
+                        <div class="feature__media">
+                            <a data-hover="웹사이트 보러가기 ↗" class="feature__img" href="https://i-wisheeee.github.io/yuhan_mainpage/" target="_blank"><img src="img/yuhan.png" alt="유한킴벌리"></a>
+                            <div class="feature__text">
+                                
+                                <p class="feature__role">기획/디자인/퍼블리싱 100%</p>
+                                <p class="feature__desc"><em>유한킴벌리 웹사이트 반응형 리뉴얼</em>입니다. 기존 풀페이지 방식에서 사용자가 불편했던 부분을 개선하고, GSAP과 JavaScript/jQuery로 인터랙션을 구현했습니다. 현재 반응형 대응을 진행하고 있습니다.</p>
+                                <ul class="feature__tags">
                                     <li>#Photoshop</li>
                                     <li>#Figma</li>
                                     <li>#illustrator</li>
@@ -1340,41 +1323,25 @@
                                     <li>#AOS</li>
                                     <li>#SwiperSlide</li>
                                 </ul>
-                                <span class="solo__role">기획/디자인/퍼블리싱 100%</span>
-                                <ul class="btn">
-                                    <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/" target="_blank"><span>Web
-                                                site💻</span></a></li>
-                                    <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/sub/sub.html"
-                                            target="_blank"><span>Sub Page⌨</span></a></li>
-                                    <li><a href="https://github.com/i-wisheeee/yuhan-kimberly" target="_blank"><span>Git
-                                                hub
-                                                <img src="img/2git.png" alt="git"></span></a></li>
-                                    <li><a href="img/유한킴벌리.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                    <li><a href="https://www.figma.com/design/BVrhCnkFtuAffNXHtA9JRQ/%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC?node-id=0-1&p=f&t=QGHNxUohIa4x0EUh-0"
-                                            target="_blank"><span>Figma <img src="img/2figma.png"
-                                                    alt="figma"></span></a>
-                                    </li>
-                                    <li><a href="img/yuhanpd.pdf" target="_blank"><span>Notion <img
-                                                    src="img/2notion.png" alt="notion"></span></a></li>
-                                </ul>
+                            <ul class="feature__btn">
+                                <li><a class="is-main" href="https://i-wisheeee.github.io/yuhan_mainpage/" target="_blank">웹사이트</a></li>
+                                <li><a class="is-main" href="img/유한킴벌리.pdf" target="_blank">디자인 가이드</a></li>
+                                <li><a href="https://i-wisheeee.github.io/yuhan_mainpage/sub/sub.html" target="_blank">Sub Page</a></li>
+                                <li><a href="https://github.com/i-wisheeee/yuhan-kimberly" target="_blank">Git hub</a></li>
+                                <li><a href="https://www.figma.com/design/BVrhCnkFtuAffNXHtA9JRQ/%EC%9C%A0%ED%95%9C%ED%82%B4%EB%B2%8C%EB%A6%AC?node-id=0-1&p=f&t=QGHNxUohIa4x0EUh-0" target="_blank">Figma</a></li>
+                                <li><a href="img/yuhanpd.pdf" target="_blank">Notion</a></li>
+                            </ul>
                             </div>
-                        </div>
-                        <div class="solo__shot">
-                            <div class="solo__win solo__win--tall"><img src="img/yuhan.png" alt="유한킴벌리"></div>
                         </div>
                     </article>
-                    <article class="solo__item">
-                        <span class="solo__idx">02</span>
-                        <div class="solo__main">
-                            <div class="solo__head">
-                                <h3 class="solo__name">고롱고롱</h3><span class="solo__sub">반응형 웹 리뉴얼 프로젝트 · 메인페이지</span>
-                            </div>
-                            <div class="solo__text">
-                                <p>고양이용품 쇼핑몰 <em>고롱고롱 웹사이트 반응형 리뉴얼</em>입니다.<br />
-                                    정리되지 않아 찾기 불편했던 구성을 사용자가 접근하기 쉽게 다시 짰습니다.<br />
-                                    GSAP과 JavaScript/jQuery로 꾸밈 요소를 더해 '고롱고롱'의 브랜드 이미지를 살렸습니다.
-                                </p>
-                                <ul class="list">
+                    <article class="feature">
+                        <div class="feature__bar"><span class="solo__idx">02</span><div class="solo__head"><h3 class="solo__name">고롱고롱</h3><span class="solo__sub">반응형 웹 리뉴얼 프로젝트 · 메인페이지</span></div></div>
+                        <div class="feature__media">
+                            <a data-hover="웹사이트 보러가기 ↗" class="feature__img" href="https://i-wisheeee.github.io/gorong_gorong/" target="_blank" rel="noopener"><img src="img/go-pc.png" alt="고롱고롱pc"><img class="is-fit is-tab" src="img/gorongtab.png" alt="고롱고롱ta"></a>
+                            <div class="feature__text">
+                                <p class="feature__role">기획/디자인/퍼블리싱 100%</p>
+                                <p class="feature__desc">고양이용품 쇼핑몰 <em>고롱고롱 웹사이트 반응형 리뉴얼</em>입니다. 정리되지 않아 찾기 불편했던 구성을 사용자가 접근하기 쉽게 다시 짰습니다. GSAP과 JavaScript/jQuery로 꾸밈 요소를 더해 '고롱고롱'의 브랜드 이미지를 살렸습니다.</p>
+                                <ul class="feature__tags">
                                     <li>#Figma</li>
                                     <li>#Photoshop</li>
                                     <li>#HTML5</li>
@@ -1385,43 +1352,25 @@
                                     <li>#AOS</li>
                                     <li>#SwiperSlide</li>
                                 </ul>
-                                <span class="solo__role">기획/디자인/퍼블리싱 100%</span>
-                                <ul class="btn">
-                                    <li><a href="https://i-wisheeee.github.io/gorong_gorong/" target="_blank"><span>Web
-                                                site💻</span></a></li>
-
-                                    <li><a href="https://github.com/i-wisheeee/gorong_gorong" target="_blank"><span>Git
-                                                hub
-                                                <img src="img/2git.png" alt="git"></span></a></li>
-                                    <li><a href="img/고롱고롱.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                    <li><a href="https://www.figma.com/design/frR8VIeRT4S0F61k9OeKbK/%EA%B3%A0%EB%A1%B1%EA%B3%A0%EB%A1%B1%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%B0%98%EC%9D%91%ED%98%95%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=vDOGnljjCbKV9pL0-0"
-                                            target="_blank"><span>Figma <img src="img/2figma.png"
-                                                    alt="figma"></span></a>
-                                    </li>
-                                    <li><a href="img/gorong_n-tion.pdf" target="_blank"><span>Notion <img
-                                                    src="img/2notion.png" alt="notion"></span></a></li>
-                                    <li><a href="https://goronggorong.co.kr/" target="_blank"><span>gorong😺<img
-                                                    src="img/2notion.png" alt="notion"></span></a></li>
-                                </ul>
+                            <ul class="feature__btn">
+                                <li><a class="is-main" href="https://i-wisheeee.github.io/gorong_gorong/" target="_blank" rel="noopener">웹사이트</a></li>
+                                <li><a class="is-main" href="img/고롱고롱.pdf" target="_blank" rel="noopener">디자인 가이드</a></li>
+                                <li><a href="https://github.com/i-wisheeee/gorong_gorong" target="_blank" rel="noopener">Git hub</a></li>
+                                <li><a href="https://www.figma.com/design/frR8VIeRT4S0F61k9OeKbK/%EA%B3%A0%EB%A1%B1%EA%B3%A0%EB%A1%B1%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%B0%98%EC%9D%91%ED%98%95%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=vDOGnljjCbKV9pL0-0" target="_blank" rel="noopener">Figma</a></li>
+                                <li><a href="img/gorong_n-tion.pdf" target="_blank" rel="noopener">Notion</a></li>
+                                <li><a href="https://goronggorong.co.kr/" target="_blank" rel="noopener">운영 사이트</a></li>
+                            </ul>
                             </div>
-                        </div>
-                        <div class="solo__shot">
-                            <div class="solo__win solo__win--tall"><img src="img/go-pc.png" alt="고롱고롱pc"></div>
-                            <div class="solo__win solo__win--tab"><img src="img/gorongtab.png" alt="고롱고롱ta"></div>
                         </div>
                     </article>
-                    <article class="solo__item">
-                        <span class="solo__idx">03</span>
-                        <div class="solo__main">
-                            <div class="solo__head">
-                                <h3 class="solo__name">한국음악저작권협회</h3><span class="solo__sub">웹 리뉴얼 프로젝트 · 메인페이지</span>
-                            </div>
-                            <div class="solo__text">
-                                <p><em>한국음악저작권협회 웹사이트 리뉴얼</em>입니다.<br />
-                                    관리가 부족했던 기존 사이트를 JavaScript/jQuery 풀페이지 구조로 개선했습니다.<br />
-                                    툴팁과 로고는 직접 리디자인했습니다.
-                                </p>
-                                <ul class="list">
+                    <article class="feature">
+                        <div class="feature__bar"><span class="solo__idx">03</span><div class="solo__head"><h3 class="solo__name">한국음악저작권협회</h3><span class="solo__sub">웹 리뉴얼 프로젝트 · 메인페이지</span></div></div>
+                        <div class="feature__media">
+                            <a data-hover="웹사이트 보러가기 ↗" class="feature__img" href="https://i-wisheeee.github.io/KOMKA/" target="_blank" rel="noopener"><img src="img/komka.png" alt="한국음악저작권"></a>
+                            <div class="feature__text">
+                                <p class="feature__role">기획/디자인/퍼블리싱 100%</p>
+                                <p class="feature__desc"><em>한국음악저작권협회 웹사이트 리뉴얼</em>입니다. 관리가 부족했던 기존 사이트를 JavaScript/jQuery 풀페이지 구조로 개선했습니다. 툴팁과 로고는 직접 리디자인했습니다.</p>
+                                <ul class="feature__tags">
                                     <li>#Figma</li>
                                     <li>#photoshop</li>
                                     <li>#HTML5</li>
@@ -1431,100 +1380,56 @@
                                     <li>#jQuery</li>
                                     <li>#Fullpage</li>
                                 </ul>
-                                <span class="solo__role">기획/디자인/퍼블리싱 100%</span>
-                                <ul class="btn">
-                                    <li><a href="https://i-wisheeee.github.io/KOMKA/" target="_blank"><span>Web
-                                                site💻</span></a></li>
-
-                                    <li><a href="https://github.com/i-wisheeee/KOMKA" target="_blank"><span>Git hub <img
-                                                    src="img/2git.png" alt="git"></span></a></li>
-                                    <li><a href="img/한국음악저작권협회.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                    <li><a href="https://www.figma.com/design/Mmf0t2A61Xc7DgaLNesH0l/%ED%95%9C%EA%B5%AD%EC%9D%8C%EC%95%85%EC%A0%80%EC%9E%91%EA%B6%8C%ED%98%91%ED%9A%8C%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=69dfCEr738mQMcG3-0"
-                                            target="_blank"><span>Figma <img src="img/2figma.png"
-                                                    alt="figma"></span></a>
-                                    </li>
-                                    <li><a href="img/komka_notion.pdf" target="_blank"><span>Notion <img
-                                                    src="img/2notion.png" alt="notion"></span></a></li>
-                                </ul>
+                            <ul class="feature__btn">
+                                <li><a class="is-main" href="https://i-wisheeee.github.io/KOMKA/" target="_blank" rel="noopener">웹사이트</a></li>
+                                <li><a class="is-main" href="img/한국음악저작권협회.pdf" target="_blank" rel="noopener">디자인 가이드</a></li>
+                                <li><a href="https://github.com/i-wisheeee/KOMKA" target="_blank" rel="noopener">Git hub</a></li>
+                                <li><a href="https://www.figma.com/design/Mmf0t2A61Xc7DgaLNesH0l/%ED%95%9C%EA%B5%AD%EC%9D%8C%EC%95%85%EC%A0%80%EC%9E%91%EA%B6%8C%ED%98%91%ED%9A%8C%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8%EB%A6%AC%EB%89%B4%EC%96%BC?node-id=0-1&p=f&t=69dfCEr738mQMcG3-0" target="_blank" rel="noopener">Figma</a></li>
+                                <li><a href="img/komka_notion.pdf" target="_blank" rel="noopener">Notion</a></li>
+                            </ul>
                             </div>
-                        </div>
-                        <div class="solo__shot">
-                            <div class="solo__win solo__win--tall"><img src="img/komka.png" alt="한국음악저작권"></div>
                         </div>
                     </article>
-                    <article class="solo__item">
-                        <span class="solo__idx">04</span>
-                        <div class="solo__main">
-                            <div class="solo__head">
-                                <h3 class="solo__name">코레일톡</h3><span class="solo__sub">앱 리디자인 프로젝트 · 스플래쉬 · 로그인 · 온보딩 ·
-                                    메인페이지 · 서브페이지 · 메뉴</span>
-                            </div>
-                            <div class="solo__text">
-                                <p><em>코레일톡 승차권 예매 앱 리디자인</em>입니다.<br />
-                                    경직되고 구식이던 공기업 앱의 인상을 친근하게 바꾸는 데 초점을 두었습니다.<br />
-                                    사용자 경험의 불편 요소를 줄여 예매 과정이 더 직관적이고 빠르게 진행되도록 개선했습니다.
-                                </p>
-                                <ul class="list">
+                    <article class="feature">
+                        <div class="feature__bar"><span class="solo__idx">04</span><div class="solo__head"><h3 class="solo__name">코레일톡</h3><span class="solo__sub">앱 리디자인 프로젝트 · 스플래쉬 · 로그인 · 온보딩 · 메인페이지 · 서브페이지 · 메뉴</span></div></div>
+                        <div class="feature__media">
+                            <a data-hover="프로토타입 보러가기 ↗" class="feature__img" href="https://www.figma.com/proto/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?t=RClOR4NSQlxN3pVp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&node-id=266-2552&starting-point-node-id=257%3A2535" target="_blank" rel="noopener"><img class="is-fit" src="img/korail.png" alt="코레일톡"><img class="is-fit is-qr" src="img/korail_qr.png" alt="qr"></a>
+                            <div class="feature__text">
+                                <p class="feature__role">기획/디자인/퍼블리싱/프로토타입 100%</p>
+                                <p class="feature__desc"><em>코레일톡 승차권 예매 앱 리디자인</em>입니다. 경직되고 구식이던 공기업 앱의 인상을 친근하게 바꾸는 데 초점을 두었습니다. 사용자 경험의 불편 요소를 줄여 예매 과정이 더 직관적이고 빠르게 진행되도록 개선했습니다.</p>
+                                <ul class="feature__tags">
                                     <li>#Figma</li>
-
                                     <li>#HTML5</li>
                                     <li>#CSS</li>
                                     <li>#JavaScript</li>
-
-
                                     <li>#SwiperSlide</li>
                                 </ul>
-                                <span class="solo__role">기획/디자인/퍼블리싱/프로토타입 100%</span>
-                                <ul class="btn">
-                                    <li><a href="https://www.figma.com/proto/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?t=RClOR4NSQlxN3pVp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&node-id=266-2552&starting-point-node-id=257%3A2535"
-                                            target="_blank"><span>
-                                                prototype💻
-                                            </span></a></li>
-
-                                    <li><a href="https://i-wisheeee.github.io/KorailTalk/" target="_blank"><span>Git hub
-                                                <img src="img/2git.png" alt="git"></span></a></li>
-                                    <li><a href="img/코레일.pdf" target="_blank"><span>Process 📁</span></a></li>
-                                    <li><a href="https://www.figma.com/design/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?node-id=0-1&p=f&t=356CBRYXXBNvfesf-0"
-                                            target="_blank"><span>Figma <img src="img/2figma.png"
-                                                    alt="figma"></span></a>
-                                    </li>
-                                    <li><a href="img/ktx_notion.pdf" target="_blank"><span>Notion <img
-                                                    src="img/2notion.png" alt="notion"></span></a></li>
-                                </ul>
+                            <ul class="feature__btn">
+                                <li><a class="is-main" href="https://www.figma.com/proto/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?t=RClOR4NSQlxN3pVp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&node-id=266-2552&starting-point-node-id=257%3A2535" target="_blank" rel="noopener">프로토타입</a></li>
+                                <li><a class="is-main" href="img/코레일.pdf" target="_blank" rel="noopener">디자인 가이드</a></li>
+                                <li><a href="https://i-wisheeee.github.io/KorailTalk/" target="_blank" rel="noopener">Git hub</a></li>
+                                <li><a href="https://www.figma.com/design/AQytXLJqYJFJdfhh2hAxxX/%EC%BD%94%EB%A0%88%EC%9D%BC?node-id=0-1&p=f&t=356CBRYXXBNvfesf-0" target="_blank" rel="noopener">Figma</a></li>
+                                <li><a href="img/ktx_notion.pdf" target="_blank" rel="noopener">Notion</a></li>
+                            </ul>
                             </div>
-                        </div>
-                        <div class="solo__shot">
-                            <div class="solo__win solo__win--fit"><img src="img/korail.png" alt="코레일톡"></div>
-                            <div class="solo__win solo__win--qr"><img src="img/korail_qr.png" alt="qr"></div>
                         </div>
                     </article>
-                    <article class="solo__item">
-                        <span class="solo__idx">05</span>
-                        <div class="solo__main">
-                            <div class="solo__head">
-                                <h3 class="solo__name">스타벅스</h3><span class="solo__sub">앱 리디자인 프로젝트 · 메인페이지 ·
-                                    서브페이지</span>
-                            </div>
-                            <div class="solo__text">
-                                <p><em>스타벅스 모바일 앱 리디자인</em>입니다.<br />
-                                    기존 앱의 사용자 조사로 개선점을 찾았고, 브랜드의 세련된 이미지는 지키면서 사용 편의를 높이는 방향으로 진행했습니다.
-                                </p>
-                                <ul class="list">
+                    <article class="feature">
+                        <div class="feature__bar"><span class="solo__idx">05</span><div class="solo__head"><h3 class="solo__name">스타벅스</h3><span class="solo__sub">앱 리디자인 프로젝트 · 메인페이지 · 서브페이지</span></div></div>
+                        <div class="feature__media">
+                            <a data-hover="프로젝트 보러가기 ↗" class="feature__img" href="img/starpdf.pdf" target="_blank" rel="noopener"><img class="is-fit" src="img/star.png" alt="스타벅스이미지"></a>
+                            <div class="feature__text">
+                                <p class="feature__role">기획/디자인 100%</p>
+                                <p class="feature__desc"><em>스타벅스 모바일 앱 리디자인</em>입니다. 기존 앱의 사용자 조사로 개선점을 찾았고, 브랜드의 세련된 이미지는 지키면서 사용 편의를 높이는 방향으로 진행했습니다.</p>
+                                <ul class="feature__tags">
                                     <li>#Photoshop</li>
                                 </ul>
-                                <span class="solo__role">기획/디자인 100%</span>
-                                <ul class="btn">
-
-                                    <li><a href="img/starpdf.pdf" target="_blank"><span>Project 📒</span></a></li>
-                                    <li><a href="img/스타벅스.pdf" target="_blank"><span>Process 📁</span></a></li>
-
-                                    <li><a href="img/sta_notion.pdf" target="_blank"><span>Notion <img
-                                                    src="img/2notion.png" alt="notion"></span></a></li>
-                                </ul>
+                            <ul class="feature__btn">
+                                <li><a class="is-main" href="img/starpdf.pdf" target="_blank" rel="noopener">프로젝트</a></li>
+                                <li><a class="is-main" href="img/스타벅스.pdf" target="_blank" rel="noopener">디자인 가이드</a></li>
+                                <li><a href="img/sta_notion.pdf" target="_blank" rel="noopener">Notion</a></li>
+                            </ul>
                             </div>
-                        </div>
-                        <div class="solo__shot">
-                            <div class="solo__win solo__win--fit"><img src="img/star.png" alt="스타벅스이미지"></div>
                         </div>
                     </article>
                 </div>
@@ -1846,6 +1751,33 @@
             sx = null;
             if (Math.abs(d) > 50) show(cur + (d < 0 ? 1 : -1));
         });
+    })();
+</script>
+<script>
+    (function () {
+        document.querySelectorAll(".project-card").forEach(function (card) {
+            var d = card.querySelector(".meta-left p");
+            if (d) card.querySelector(".img-wrapper").dataset.hover = d.textContent.trim();
+        });
+        document.querySelectorAll(".work__zoom").forEach(function (z) {
+            z.addEventListener("pointermove", function (e) {
+                z.style.setProperty("--my", e.clientY - z.getBoundingClientRect().top + "px");
+            });
+        });
+        var items = document.querySelectorAll(".feature");
+        var fit = function () {
+            items.forEach(function (f) {
+                var img = f.querySelector(".feature__img");
+                if (innerWidth < 1101) { f.style.removeProperty("--img-h"); return; }
+                var top = parseFloat(getComputedStyle(f).top) || 0;
+                var rest = f.offsetHeight - img.offsetHeight;
+                f.style.setProperty("--img-h", Math.max(140, innerHeight - top - rest - 24) + "px");
+            });
+        };
+        fit();
+        document.fonts.ready.then(fit);
+        addEventListener("load", fit);
+        addEventListener("resize", fit);
     })();
 </script>
 </body>
