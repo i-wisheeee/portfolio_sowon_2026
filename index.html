@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Nunito:wght@800&family=Playfair+Display:ital@0;1&display=swap">
-    <link rel="stylesheet" href="css/main.css?v=20261109f">
+    <link rel="stylesheet" href="css/main.css?v=20261115e">
     <link rel="stylesheet" href="css/effects.css?v=20261109c">
+    <link rel="stylesheet" href="css/projects.css?v=20261111b">
 
 
 
@@ -154,10 +155,12 @@
                     const slot = (i * 7) % N;
                     const top = slot < 9;
                     const k = top ? slot : slot - 9;
+                    const big = el.classList.contains("is-big");
+                    const ang = slot * 2.39996, rad = Math.sqrt((slot + 0.5) / N);
                     return {
-                        el,
-                        sx: jitter(i, 12.9) * 15, sy: jitter(i, 78.2) * 12, sr: jitter(i, 37.7) * 18,
-                        intro: { s: isAnimationOk ? 0 : 1, y: isAnimationOk ? 7 : 0 },
+                        el, big,
+                        sx: Math.cos(ang) * rad * 38, sy: Math.sin(ang) * rad * 30, sr: jitter(i, 37.7) * 18,
+                        intro: { s: isAnimationOk && !big ? 0 : 1, y: isAnimationOk ? (big ? -75 : 7) : 0 },
                         ex: top ? -42 + k * 10.5 : -37 + k * 10.5,
                         ey: top ? -(20 + (k % 3) * 7) : 20 + ((k + 1) % 3) * 7,
                         depth: 0.55 + (i / (N - 1)) * 0.75,
@@ -167,10 +170,15 @@
                 if (isAnimationOk) {
                     const pop = () => {
                         const order = items.map((_, i) => i).sort(() => Math.random() - 0.5);
+                        let b = 0;
                         order.forEach((idx, n) => {
                             const t = items[idx];
-                            gsap.to(t.intro, { s: 1, duration: gsap.utils.random(0.7, 1.1), delay: 0.3 + n * 0.16 + Math.random() * 0.12, ease: "back.out(2.4)" });
-                            gsap.to(t.intro, { y: 0, duration: gsap.utils.random(1.1, 1.6), delay: 0.3 + n * 0.16, ease: "power2.out" });
+                            if (t.big) {
+                                gsap.to(t.intro, { y: 0, duration: gsap.utils.random(1.3, 1.7), delay: 0.2 + b++ * 0.35, ease: "bounce.out" });
+                                return;
+                            }
+                            gsap.to(t.intro, { s: 1, duration: gsap.utils.random(0.7, 1.1), delay: 0.9 + n * 0.14 + Math.random() * 0.12, ease: "back.out(2.4)" });
+                            gsap.to(t.intro, { y: 0, duration: gsap.utils.random(1.1, 1.6), delay: 0.9 + n * 0.14, ease: "power2.out" });
                         });
                     };
                     if (document.readyState === "complete") pop(); else addEventListener("load", pop, { once: true });
@@ -977,7 +985,7 @@
 
                         <div class="image">
                             <div class="lanyard">
-                                <img src="img/me.jpg" alt="증명사진">
+                                <img src="img/me2.jpeg" alt="증명사진">
                             </div>
                             <p class="lanyard-hint">click here ↑</p>
                             <ul class="contact">
@@ -1177,7 +1185,7 @@
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                                 <div>
-                                    <dt>성과</dt>
+                                    <dt>사용툴</dt>
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                             </dl>
@@ -1195,7 +1203,7 @@
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                                 <div>
-                                    <dt>성과</dt>
+                                    <dt>사용툴</dt>
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                             </dl>
@@ -1213,7 +1221,7 @@
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                                 <div>
-                                    <dt>성과</dt>
+                                    <dt>사용툴</dt>
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                             </dl>
@@ -1231,7 +1239,7 @@
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                                 <div>
-                                    <dt>성과</dt>
+                                    <dt>사용툴</dt>
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                             </dl>
@@ -1249,7 +1257,7 @@
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                                 <div>
-                                    <dt>성과</dt>
+                                    <dt>사용툴</dt>
                                     <dd>[내용 추가 필요]</dd>
                                 </div>
                             </dl>
@@ -1271,26 +1279,6 @@
                             </div>
                             <button type="button" class="banner__btn" data-dir="1" aria-label="다음 배너">&rarr;</button>
                             <span class="banner__count" aria-live="polite">1 / 5</span>
-                        </div>
-                    </li>
-                    <li class="work__item">
-                        <div class="work__title">
-                            <span class="work__idx">04</span>
-                            <h3>인사말</h3>
-                        </div>
-                        <div class="work__body">
-                            <div class="work__media">[이미지 추가 필요]</div>
-                            <p class="work__desc">[내용 추가 필요]</p>
-                            <dl class="work__meta">
-                                <div>
-                                    <dt>기간</dt>
-                                    <dd>[내용 추가 필요]</dd>
-                                </div>
-                                <div>
-                                    <dt>사용 툴</dt>
-                                    <dd>[내용 추가 필요]</dd>
-                                </div>
-                            </dl>
                         </div>
                     </li>
                 </ol>

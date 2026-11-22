@@ -845,7 +845,7 @@ body {
 }
 .section-02 .skill_box {
   display: flex;
-  gap: 2rem;
+  gap: 5rem;
   justify-content: space-between;
   width: 100%;
   margin-top: 10rem;
@@ -4555,5 +4555,89 @@ a.solo__win {
 
   .feature__media .feature__text {
     padding-bottom: 12rem;
+  }
+}
+
+
+@media (min-width: 1101px) {
+  .section-01 .card-cover {
+    grid-template-columns: 46rem 66rem;
+    column-gap: 8rem;
+    padding: 6rem 2rem 4.4rem;
+    row-gap: 3.2rem;
+  }
+  .section-01 .card-cover #design .lanyard.is-ready {
+    height: calc(100vh - 46rem);
+  }
+  .section-01 .card-cover .highlight {
+    grid-column: 1 / -1;
+    justify-self: center;
+    align-self: center;
+    padding-top: 0;
+    text-align: center;
+  }
+  .about-stack .about-card .skill-row {
+    gap: 3rem;
+  }
+  .about-stack .about-card .skill-row h3 {
+    width: 20rem;
+    line-height: 1.35;
+  }
+  .about-stack .about-card .skill-row ul {
+    flex: 1;
+    justify-content: space-around;
+    gap: 0;
+  }
+  .about-stack .about-card.skill_box {
+    justify-content: space-between;
+  }
+}
+
+.section-01 .card-cover .about-stack .about-card :is(.about-title, .skill-title, :is(#tech, #tech2) .item h2, :is(#tech, #tech2) .item .dpth-02 h2) {
+  align-self: stretch;
+  margin: 0 0 1rem;
+  padding: 0 0 0.6rem;
+  border-bottom: 0.2rem solid #11004e;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.1rem;
+}
+
+@media (min-width: 1101px) {
+  .section-01 .card-cover {
+    grid-template-rows: auto auto 4rem;
+    align-content: center;
+  }
+  .section-01 .card-cover #design {
+    grid-row: 2 / span 2;
+    align-self: stretch;
+  }
+  .section-01 .card-cover #design .image {
+    height: 100%;
+  }
+  .section-01 .card-cover #design .contact {
+    margin-top: auto;
+  }
+  .section-01 .card-cover #design .lanyard.is-ready {
+    height: min(calc(100vh - 35rem), 56rem);
+  }
+  .about-wrap {
+    align-self: end;
+  }
+  .section-01 .card-cover .highlight {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+    align-self: end;
+    margin: 0;
+    font-size: 3rem;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1101px) {
+  .about-stack {
+    min-height: 50rem;
   }
 }

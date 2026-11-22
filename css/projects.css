@@ -1,0 +1,327 @@
+#work,
+#mywork {
+  --pj-fg: #fff;
+  --pj-mute: rgba(255, 255, 255, 0.62);
+  --pj-line: rgba(255, 255, 255, 0.18);
+  --pj-accent: #f1ffc0;
+  --pj-radius: 2.4rem;
+  background: #000;
+  color: var(--pj-fg);
+}
+
+/* 섹션 헤더 */
+#work .work__head,
+#mywork .work__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+}
+
+#work .work__no,
+#mywork .work__no {
+  margin: 0 0 2rem;
+  padding: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+  color: var(--pj-accent);
+  -webkit-text-stroke: 0;
+}
+
+#work .work__head h2,
+#mywork .work__head h2 {
+  margin: 0;
+  font-size: 7.2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--pj-fg);
+}
+
+#work .work__head h2 small,
+#mywork .work__head h2 small {
+  margin-top: 1.6rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.3rem;
+  color: var(--pj-mute);
+}
+
+#work .work__head p,
+#mywork .work__head p {
+  margin: 2.4rem 0 0;
+  font-size: 2rem;
+  line-height: 1.6;
+  color: var(--pj-mute);
+  word-break: keep-all;
+}
+
+/* 실무 프로젝트 */
+#work .work__item {
+  border-top: 0.1rem solid var(--pj-line);
+}
+
+#work .work__idx {
+  font-size: 1.6rem;
+  color: #000;
+}
+
+#work .work__title h3 {
+  font-size: 4.8rem;
+  color: var(--pj-fg);
+}
+
+#work .work__row p {
+  color: var(--pj-mute);
+}
+
+#work .work__tab {
+  border-color: var(--pj-line);
+  color: var(--pj-fg);
+}
+
+#work .work__tab b {
+  color: var(--pj-mute);
+}
+
+#work .work__tab:hover,
+#work .work__tab:focus-visible {
+  border-color: var(--pj-fg);
+}
+
+#work .work__tab.is-on {
+  border-color: var(--pj-accent);
+  background: var(--pj-accent);
+  color: #000;
+}
+
+#work .work__tab.is-on b {
+  color: #000;
+}
+
+#work .work__tab:focus-visible {
+  outline-color: var(--pj-accent);
+}
+
+#work .work__media {
+  border: 0;
+  border-radius: var(--pj-radius);
+  background: #111;
+  color: var(--pj-mute);
+}
+
+#work .work__desc {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--pj-fg);
+  word-break: keep-all;
+}
+
+#work .work__meta {
+  font-size: 1.6rem;
+}
+
+#work .work__meta div {
+  border-top-color: var(--pj-line);
+}
+
+#work .work__meta dt {
+  color: var(--pj-mute);
+}
+
+#work .work__meta dd {
+  color: var(--pj-fg);
+}
+
+/* 개인프로젝트 카드 */
+/* 개인프로젝트: 프로젝트별 고유 색상 */
+#mywork .feature:nth-child(1) { --brand: #1aa7ec; --brand-fg: #000; }
+#mywork .feature:nth-child(2) { --brand: #f6cf3a; --brand-fg: #000; }
+#mywork .feature:nth-child(3) { --brand: #e8334a; --brand-fg: #fff; }
+#mywork .feature:nth-child(4) { --brand: #2d6df6; --brand-fg: #fff; }
+#mywork .feature:nth-child(5) { --brand: #00a862; --brand-fg: #fff; }
+
+#mywork .feature__bar .solo__idx {
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+
+#mywork .feature__bar .solo__name {
+  color: var(--pj-fg);
+}
+
+#mywork .feature__bar .solo__sub {
+  color: var(--pj-mute);
+}
+
+#mywork .feature__role {
+  color: var(--brand);
+}
+
+#mywork .feature__desc {
+  color: var(--pj-fg);
+}
+
+#mywork .feature__desc em {
+  color: var(--brand);
+}
+
+#mywork .feature__tags {
+  color: var(--pj-mute);
+}
+
+#mywork .feature__btn a {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--pj-fg);
+}
+
+#mywork .feature__btn a.is-main {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+
+#mywork .feature__btn a:hover,
+#mywork .feature__btn a:focus-visible {
+  border-color: var(--pj-fg);
+  background: var(--pj-fg);
+  color: #000;
+}
+
+#mywork .feature__btn a:not(.is-main):hover,
+#mywork .feature__btn a:not(.is-main):focus-visible {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+
+/* 모바일/태블릿/터치: 설명은 숨기고 버튼만 남긴다 */
+@media (max-width: 1100px), (hover: none) {
+  #mywork .feature__role,
+  #mywork .feature__desc,
+  #mywork .feature__tags {
+    display: none;
+  }
+
+  #mywork .feature__btn {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #mywork .feature__btn li {
+    flex: 1 1 auto;
+  }
+
+  #mywork .feature__btn li:has(.is-main) {
+    flex: 1 1 calc(50% - 0.4rem);
+  }
+
+  #mywork .feature__btn a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1.2rem 1.4rem;
+    font-size: 1.4rem;
+  }
+
+  #mywork .feature__btn a.is-main {
+    padding: 1.5rem 1.4rem;
+    font-size: 1.6rem;
+  }
+}
+
+/* 데스크톱 호버: 설명은 왼쪽, 버튼은 오른쪽 위 세로 배치 (다음 카드가 아래에서 덮어도 버튼이 끝까지 보이도록) */
+@media (min-width: 1101px) and (hover: hover) {
+  #mywork .feature__img::after {
+    display: none;
+  }
+
+  #mywork .feature__media .feature__text {
+    inset: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22vw;
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
+    column-gap: 4vw;
+    padding: 3vw 4vw;
+    background: rgba(0, 0, 0, 0.92);
+  }
+
+  #mywork .feature__media .feature__role {
+    grid-column: 1;
+    margin: 0;
+    font-size: 1.5vw;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+  }
+
+  #mywork .feature__media .feature__desc {
+    grid-column: 1;
+    max-width: none;
+    margin: 1.2vw 0 0;
+    font-size: 1.9vw;
+    line-height: 1.55;
+    opacity: 1;
+  }
+
+  #mywork .feature__media .feature__tags {
+    grid-column: 1;
+    max-width: none;
+    gap: 0.5vw 1.2vw;
+    margin: 1.4vw 0 0;
+    font-size: 1.15vw;
+    opacity: 1;
+  }
+
+  #mywork .feature__text .feature__btn {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-self: start;
+    gap: 0.8vw;
+    margin: 0;
+    padding: 0 0 0 2.4vw;
+    border-top: 0;
+    border-left: 0.1rem solid rgba(255, 255, 255, 0.22);
+  }
+
+  #mywork .feature__media .feature__btn a {
+    justify-content: center;
+    width: 100%;
+    padding: 0.9vw 1.6vw;
+    font-size: 1.25vw;
+  }
+
+  #mywork .feature__media .feature__btn a.is-main {
+    padding: 1.2vw 1.6vw;
+    font-size: 1.5vw;
+  }
+}
+
+@media (max-width: 1100px) {
+  #work .work__head h2,
+  #mywork .work__head h2 {
+    font-size: 4.8rem;
+  }
+
+  #work .work__head p,
+  #mywork .work__head p {
+    font-size: 1.6rem;
+  }
+
+  #work .work__title h3 {
+    font-size: 3.2rem;
+  }
+
+  #work .work__desc {
+    font-size: 2rem;
+  }
+}
